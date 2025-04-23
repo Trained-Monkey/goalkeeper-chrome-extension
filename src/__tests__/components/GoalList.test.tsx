@@ -19,47 +19,14 @@ describe('GoalList', () => {
     })
 
     it('should render goals', () => {
-        const goals = [{ "name" : "Drink water" }]
+        
+    })
 
+    it('should be sorted by expiry', () => {
 
     })
 
-    it('should be sorted', () => {
-
-    })
-
-    it('should be able to remove', () => {
+    it('should be able to remove goals', () => {
 
     })
 })
-
-// describe('Dropdown', () => {
-//     test('renders correctly', () => {
-//         render(<Dropdown />)
-        
-//         const elements = screen.getAllByRole('img')
-//         elements.map((element) => {
-//             expect(element).toHaveAttribute('src')
-//         })
-//     });
-
-//     test('has correct number of elements', () => {
-//         render(<Dropdown />)
-        
-//         const elements = screen.getAllByRole('img')
-//         expect(elements.length).toBe(ITEM_SELECTABLE.length)
-//     });
-
-//     test('can be clicked on', async () => {
-//         const mockHandleClick = jest.fn();
-//         render(<Dropdown
-
-//             handleOnClick={mockHandleClick}
-//         />)
-
-//         const element = screen.getAllByRole('img')[0];
-
-//         await userEvent.click(element);
-//         expect(mockHandleClick).toHaveBeenCalled();
-//     })
-// })
