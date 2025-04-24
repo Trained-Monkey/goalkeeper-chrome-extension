@@ -13,10 +13,18 @@ function getDaysBetweenDate(start: Date, end: Date): number {
     return (treatAsUTC(end).getTime() - treatAsUTC(start).getTime()) / millisecondsPerDay;
 }
 
-function daysToExpiryString(daysTillExpiry: number): string {
+function millisecondsToExpiryString(millisecondsTillExpiry: number): string {
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+    const millisecondsPerHour = 60 * 60 * 1000;
     const monthThreshold = 27;
     const weekThreshold = 7;
     const dayThreshold = 1;
+    const daysTillExpiry = Math.floor(millisecondsTillExpiry 
+        / millisecondsPerDay);
+
+    millisecondsTillExpiry -= daysTillExpiry * millisecondsPerDay;
+    const hoursTillExpiry = Math.floor(millisecondsTillExpiry 
+        / millisecondsPerHour);
 
     if (daysTillExpiry > monthThreshold) {
         var unitOfTime: string = "month";
@@ -28,9 +36,8 @@ function daysToExpiryString(daysTillExpiry: number): string {
         var unitOfTime: string = "day";
         var numUnits: number = Math.floor(daysTillExpiry);
     } else {
-        // TODO: Better handling for hourly countdowns
         var unitOfTime: string = "hour";
-        var numUnits: number = 23;
+        var numUnits: number = hoursTillExpiry;
     }
 
     if (numUnits > 1){
@@ -41,6 +48,8 @@ function daysToExpiryString(daysTillExpiry: number): string {
 }
 
 function timeToExpiryString(lastCompleted: Date, goalType: TYPES): string{
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
     switch (goalType){
         case TYPES.DAILY:
             var daysToIncrement = 1;
@@ -64,10 +73,10 @@ function timeToExpiryString(lastCompleted: Date, goalType: TYPES): string{
     }
 
     const currentDate = new Date();
-    const daysRemaining = daysToIncrement 
-        - getDaysBetweenDate(lastCompleted, currentDate);
+    const millisecondsRemaining = daysToIncrement * millisecondsPerDay
+        - getDaysBetweenDate(lastCompleted, currentDate) * millisecondsPerDay;
 
-    return daysToExpiryString(daysRemaining);
+    return millisecondsToExpiryString(millisecondsRemaining);
 }
 
 function Goal(prop: GoalInput): React.JSX.Element {

@@ -27,6 +27,22 @@ describe("Goal", () => {
         expect(screen.getByText(/in 23 hours/)).toBeInTheDocument();
     })
 
+    it("can show hourly expiry", () => {
+        const twentyHoursAgo = new Date(Date.now() - (20 * 60 * 60 * 1000));
+        const testData: GoalInput = {
+            name: "Drink water",
+            lastCompleted: twentyHoursAgo,
+            type: TYPES.DAILY,
+            deletionCallback: () => {}
+        }
+
+        render(<Goal {...testData} />);
+
+        expect(screen.getByText("Drink water")).toBeInTheDocument();
+        expect(screen.getByText("Daily")).toBeInTheDocument();
+        expect(screen.getByText(/in 3 hours/)).toBeInTheDocument();
+    })
+
     it("can show weekly expiry", () =>{
         const currentDate = new Date();
         const testData: GoalInput = {
