@@ -1,5 +1,5 @@
 import React from "react";
-import Goal from "./Goal";
+import Goal from "../Goal/Goal";
 
 function GoalList(): React.JSX.Element {
     return (

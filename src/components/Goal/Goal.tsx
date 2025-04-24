@@ -1,6 +1,6 @@
 import React from "react";
-import GoalInput from "../interface/GoalInput";
-import { TYPES } from "../constants/Goal";
+import GoalInput from "../../interface/GoalInput";
+import { TYPES } from "../../constants/Goal";
 
 function treatAsUTC(date: Date): Date {
     var result = new Date(date);

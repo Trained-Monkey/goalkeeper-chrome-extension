@@ -5,7 +5,7 @@
 import {screen, render} from "@testing-library/react";
 import userEvent from '@testing-library/user-event'
 
-import Goal from "../../components/Goal";
+import Goal from "./Goal";
 import GoalInput from "../../interface/GoalInput";
 import { TYPES } from "../../constants/Goal";
 import React from "react";

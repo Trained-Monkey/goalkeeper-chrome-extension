@@ -6,7 +6,7 @@
 
 import { render } from '@testing-library/react';
 import {screen } from "@testing-library/dom";
-import GoalList from '../../components/GoalList';
+import GoalList from './GoalList';
 import React from 'react';
 
 
