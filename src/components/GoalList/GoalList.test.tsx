@@ -99,17 +99,28 @@ describe('GoalList', () => {
         }
     })
 
+    // Not sure if there is a better way to do test, could easily break if
+    // order of elements is changed. Want to find the button corresponding to
+    // a goal and simulate a click on it and ensure the correct goal is removed.
     it('should remove the correct goal', () => {
         const testData: GoalInput[] = generateTestData();
 
         render(<GoalList goals={testData}/>)
 
-        let goal3: HTMLElement = screen.getByText('Drink water');
-        const button: HTMLElement = within(goal3).getByRole('button');
+        let goal3: HTMLElement = screen.getByText('Goal #3');
+        const parent: HTMLElement | null = goal3.parentElement;
+
+        // Feels kind of hacky to assert parent is not null
+        if (parent === null){
+            expect(parent).not.toBeNull();
+            return;
+        }
+
+        const button: HTMLElement = within(parent).getByRole('button', {
+            name: /Delete/
+        });
         userEvent.click(button);
 
-        expect(screen.queryByText('Drink water')).not.toBeInTheDocument();
-
-
+        expect(screen.queryByText('Goal #3')).not.toBeInTheDocument();
     })
 })
