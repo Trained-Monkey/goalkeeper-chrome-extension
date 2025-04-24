@@ -3,8 +3,8 @@ import { TYPES } from "../constants/Goal"
 interface GoalInput {
     name: string,
     type: TYPES,
-    last_completed: Date,
-    callback: any
+    lastCompleted: Date,
+    deletionCallback: any
 }
 
 export default GoalInput;

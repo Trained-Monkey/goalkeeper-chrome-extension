@@ -1,6 +1,6 @@
 export enum TYPES {
-    DAILY,
-    WEEKLY,
-    FORTNIGHTLY,
-    MONTHLY
+    DAILY = "Daily",
+    WEEKLY = "Weekly",
+    FORTNIGHTLY = "Fortnightly",
+    MONTHLY = "Monthly"
 }
