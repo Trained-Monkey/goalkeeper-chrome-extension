@@ -131,4 +131,5 @@ describe("Goal", () => {
 
         expect(testData.finishedCallback.mock.calls).toHaveLength(1)
     })
+    
 })

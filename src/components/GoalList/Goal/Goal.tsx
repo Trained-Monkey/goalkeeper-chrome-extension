@@ -51,11 +51,8 @@ function millisecondsToExpiryString(millisecondsTillExpiry: number): string {
     
     return `Expires in ${numUnits.toString()} ${unitOfTime}`;
 }
-
-function timeToExpiryString(lastCompleted: Date, goalType: TYPES): string{
-    const millisecondsPerDay = 24 * 60 * 60 * 1000;
-    let daysToIncrement: number;
-
+export function getDaysToIncrement(lastCompleted: Date, goalType: TYPES): number {
+    let daysToIncrement;
     switch (goalType){
         case TYPES.DAILY:
             daysToIncrement = 1;
@@ -77,28 +74,55 @@ function timeToExpiryString(lastCompleted: Date, goalType: TYPES): string{
         default:
             throw new Error("Parameter is not a valid goal type.");
     }
+    return daysToIncrement;
+}
+function timeToExpiryString(lastCompleted: Date, goalType: TYPES): string{
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+    let daysToIncrement = getDaysToIncrement(lastCompleted, goalType);
 
     const currentDate = new Date();
-    const millisecondsRemaining = daysToIncrement * millisecondsPerDay
+    const millisecondsRemaining = 
+        daysToIncrement * millisecondsPerDay
         - getDaysBetweenDate(lastCompleted, currentDate) * millisecondsPerDay;
 
     return millisecondsToExpiryString(millisecondsRemaining);
 }
 
 function Goal(prop: GoalInput): React.JSX.Element {
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
     const { name, type, lastCompleted, 
         deletionCallback, finishedCallback }  = prop;
     const expiry: string = timeToExpiryString(lastCompleted, type);
 
+    function handleSubmitButtonClick() {
+        const nextGoalState: GoalInput = {
+            name: name,
+            type: type,
+            lastCompleted: new Date(lastCompleted.getTime() 
+                + getDaysToIncrement(lastCompleted, type) 
+                * millisecondsPerDay),
+            deletionCallback: () => {},
+            finishedCallback: () => {}
+        }
+
+        finishedCallback(nextGoalState);
+    }
+    const taskCompleted = new Date() < lastCompleted;
+
     return (
-        <li className="list-group-item goal-container">
+        <li className={
+            (taskCompleted ? "list-group-item  list-group-item-success" 
+                : "list-group-item") 
+            + " goal-container"
+        }>
             <p className="goal-text"> {name} </p>
             <p className="goal-text"> {type}</p>
             <p className="goal-text"> {expiry} </p>
             <button onClick={deletionCallback} name="delete-button" 
                 className="btn btn-primary"> Delete </button>
-            <button onClick={finishedCallback} name="submit-button" 
-                className="btn btn-primary"> Done </button>
+
+            {taskCompleted ? null : <button onClick={handleSubmitButtonClick} name="submit-button" 
+                className="btn btn-primary"> Done </button>}
         </li >
     )
 }

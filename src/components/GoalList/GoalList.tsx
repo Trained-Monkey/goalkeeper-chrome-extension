@@ -1,22 +1,70 @@
-import React from "react";
-import Goal from "./Goal/Goal";
+import React, { useState } from "react";
+import Goal, {getDaysToIncrement} from "./Goal/Goal";
 import GoalInput from "../../interface/GoalInput";
-import { TYPES } from "../../constants/Goal";
 import GoalListInput from "../../interface/GoalListInput";
 
-function GoalList(prop: GoalListInput): React.JSX.Element {
-    const dummyData: GoalInput = {
-        name: "Drink water",
-        type: TYPES.DAILY,
-        lastCompleted: new Date(),
-        deletionCallback: () => {},
-        finishedCallback: () => {}
+function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
+    const currentDate = new Date();
+    const xCompleted = x.lastCompleted > currentDate;
+    const yCompleted = y.lastCompleted > currentDate;
+
+    if (xCompleted && !yCompleted){
+        return 1
     }
+
+    if (!xCompleted && yCompleted) {
+        return -1;
+    }
+
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+    const xExpiry = new Date(x.lastCompleted.getTime() 
+        + getDaysToIncrement(x.lastCompleted, x.type)
+        * millisecondsPerDay);
+
+    const yExpiry = new Date(y.lastCompleted.getTime() 
+        + getDaysToIncrement(y.lastCompleted, y.type)
+        * millisecondsPerDay);
+
+    if (xExpiry < yExpiry)
+    {
+        return -1;
+    }
+    
+    return 1;
+}
+
+function GoalList(prop: GoalListInput): React.JSX.Element {
+    const [rawGoals, setRawGoals] = useState(prop.goals);
+    // Attaching our callback functions to update state when respective buttons
+    // are clicked
+    const goals = rawGoals.map(prev => {
+        return {
+            ...prev,
+            deletionCallback: () => {},
+            finishedCallback: (nextGoalState: GoalInput) => {
+                setRawGoals(prev => {
+                    return prev.map(goal => {
+                        if (goal.name === nextGoalState.name) {
+                            return nextGoalState;
+                        }
+                        return goal;
+                    })
+                })
+            }
+        }
+    })
+
+    goals.sort((a, b) => goalExpiresBeforeGoal(a,b));
+
     return (
         <div>
             <h1>Goal List</h1>
             <ul className="list-group">
-                <Goal {...dummyData}/>
+                {
+                    goals.map((goal: GoalInput) => (
+                        <Goal key={goal.name} {...goal}/>
+                    ))
+                }
             </ul>
         </div>
     )
