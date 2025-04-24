@@ -85,12 +85,15 @@ describe('GoalList', () => {
 
         render(<GoalList goals={testData}/>)
 
-        const buttons: HTMLElement[] = screen.queryAllByRole('button');
         let elements: HTMLElement[];
-        for (let i = 0; i < buttons.length; i++){
-            userEvent.click(buttons[i]);
+        let count = 0;
+        for (let buttons: HTMLElement[] = screen.queryAllByRole('button'); 
+                buttons.length > 0; 
+                buttons = screen.queryAllByRole('button')){
+            userEvent.click(buttons[0]);
             elements = screen.queryAllByText(/Goal #/);
-            expect(elements.length).toBe(testData.length - i - 1);
+            count += 1
+            expect(elements.length).toBe(testData.length - count);
         }
     })
 

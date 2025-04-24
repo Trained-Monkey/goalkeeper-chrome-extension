@@ -107,6 +107,10 @@ function Goal(prop: GoalInput): React.JSX.Element {
 
         finishedCallback(nextGoalState);
     }
+
+    function handleDeleteButtonClick () {
+        deletionCallback(name);
+    }
     const taskCompleted = new Date() < lastCompleted;
 
     return (
@@ -118,7 +122,7 @@ function Goal(prop: GoalInput): React.JSX.Element {
             <p className="goal-text"> {name} </p>
             <p className="goal-text"> {type}</p>
             <p className="goal-text"> {expiry} </p>
-            <button onClick={deletionCallback} name="delete-button" 
+            <button onClick={handleDeleteButtonClick} name="delete-button" 
                 className="btn btn-primary"> Delete </button>
 
             {taskCompleted ? null : <button onClick={handleSubmitButtonClick} name="submit-button" 

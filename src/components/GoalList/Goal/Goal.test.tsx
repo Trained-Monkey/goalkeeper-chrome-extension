@@ -106,12 +106,12 @@ describe("Goal", () => {
             finishedCallback: () => {}
         }
         
-        render(<Goal {...testData}/>)
+        render(<Goal {...testData}/>);
         const button = screen.getByRole('button', {name: /Delete/, hidden: true});
 
         userEvent.click(button);
 
-        expect(testData.deletionCallback.mock.calls).toHaveLength(1)
+        expect(testData.deletionCallback.mock.calls).toHaveLength(1);
     })
 
     it("has a finished button", () => {
@@ -124,12 +124,27 @@ describe("Goal", () => {
             finishedCallback: jest.fn(() => {})
         }
         
-        render(<Goal {...testData}/>)
+        render(<Goal {...testData}/>);
         const button = screen.getByRole('button', {name: /Done/});
 
         userEvent.click(button);
 
-        expect(testData.finishedCallback.mock.calls).toHaveLength(1)
+        expect(testData.finishedCallback.mock.calls).toHaveLength(1);
     })
-    
+
+    test('finished goals should not have a submit button', () => {
+        const nextExpiry = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        const testData: GoalInput = {
+            name: "Drink water",
+            lastCompleted: nextExpiry,
+            type: TYPES.DAILY,
+            deletionCallback: () => {},
+            finishedCallback: jest.fn(() => {})
+        }
+
+        render(<Goal {...testData}/>);
+
+        expect(screen.queryByRole('button', {name: /Done/}))
+            .not.toBeInTheDocument();
+    })
 })

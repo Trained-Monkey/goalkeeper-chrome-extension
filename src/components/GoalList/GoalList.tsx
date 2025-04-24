@@ -40,7 +40,17 @@ function GoalList(prop: GoalListInput): React.JSX.Element {
     const goals = rawGoals.map(prev => {
         return {
             ...prev,
-            deletionCallback: () => {},
+            deletionCallback: (goalToBeDeleted: string) => {
+                setRawGoals(prev => {
+                    return prev.filter(goal => {
+                        if (goal.name === goalToBeDeleted){
+                            return false;
+                        }
+
+                        return true;
+                    })
+                })
+            },
             finishedCallback: (nextGoalState: GoalInput) => {
                 setRawGoals(prev => {
                     return prev.map(goal => {
