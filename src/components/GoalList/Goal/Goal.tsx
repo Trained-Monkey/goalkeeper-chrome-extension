@@ -10,8 +10,9 @@ function treatAsUTC(date: Date): Date {
 }
 
 function getDaysBetweenDate(start: Date, end: Date): number {
-    var millisecondsPerDay = 24 * 60 * 60 * 1000;
-    return (treatAsUTC(end).getTime() - treatAsUTC(start).getTime()) / millisecondsPerDay;
+    let millisecondsPerDay = 24 * 60 * 60 * 1000;
+    let milliseconds = treatAsUTC(end).getTime() - treatAsUTC(start).getTime();
+    return milliseconds / millisecondsPerDay;
 }
 
 function millisecondsToExpiryString(millisecondsTillExpiry: number): string {
@@ -85,7 +86,8 @@ function timeToExpiryString(lastCompleted: Date, goalType: TYPES): string{
 }
 
 function Goal(prop: GoalInput): React.JSX.Element {
-    const { name, type, lastCompleted, deletionCallback }  = prop;
+    const { name, type, lastCompleted, 
+        deletionCallback, finishedCallback }  = prop;
     const expiry: string = timeToExpiryString(lastCompleted, type);
 
     return (
@@ -93,7 +95,10 @@ function Goal(prop: GoalInput): React.JSX.Element {
             <p className="goal-text"> {name} </p>
             <p className="goal-text"> {type}</p>
             <p className="goal-text"> {expiry} </p>
-            <button onClick={deletionCallback} className="btn btn-primary"> Done </button>
+            <button onClick={deletionCallback} name="delete-button" 
+                className="btn btn-primary"> Delete </button>
+            <button onClick={finishedCallback} name="submit-button" 
+                className="btn btn-primary"> Done </button>
         </li >
     )
 }

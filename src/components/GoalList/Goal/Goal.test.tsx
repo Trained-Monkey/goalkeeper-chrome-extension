@@ -17,7 +17,8 @@ describe("Goal", () => {
             name: "Drink water",
             lastCompleted: currentDate,
             type: TYPES.DAILY,
-            deletionCallback: () => {}
+            deletionCallback: () => {},
+            finishedCallback: () => {}
         }
 
         render(<Goal {...testData} />);
@@ -33,7 +34,8 @@ describe("Goal", () => {
             name: "Drink water",
             lastCompleted: twentyHoursAgo,
             type: TYPES.DAILY,
-            deletionCallback: () => {}
+            deletionCallback: () => {},
+            finishedCallback: () => {}
         }
 
         render(<Goal {...testData} />);
@@ -49,7 +51,8 @@ describe("Goal", () => {
             name: "Drink water",
             lastCompleted: currentDate,
             type: TYPES.WEEKLY,
-            deletionCallback: () => {}
+            deletionCallback: () => {},
+            finishedCallback: () => {}
         }
 
         render(<Goal {...testData} />);
@@ -65,7 +68,8 @@ describe("Goal", () => {
             name: "Drink water",
             lastCompleted: currentDate,
             type: TYPES.FORTNIGHTLY,
-            deletionCallback: () => {}
+            deletionCallback: () => {},
+            finishedCallback: () => {}
         }
 
         render(<Goal {...testData} />);
@@ -81,7 +85,8 @@ describe("Goal", () => {
             name: "Drink water",
             lastCompleted: currentDate,
             type: TYPES.MONTHLY,
-            deletionCallback: () => {}
+            deletionCallback: () => {},
+            finishedCallback: () => {}
         }
 
         render(<Goal {...testData} />);
@@ -91,20 +96,39 @@ describe("Goal", () => {
         expect(screen.getByText(/in 1 month/)).toBeInTheDocument();
     })
 
-    it("has a clickable button", () => {
+    it("has a delete button", () => {
         const currentDate = new Date();
         const testData: GoalInput = {
             name: "Drink water",
             lastCompleted: currentDate,
             type: TYPES.DAILY,
-            deletionCallback: jest.fn(() => {})
+            deletionCallback: jest.fn(() => {}),
+            finishedCallback: () => {}
         }
         
         render(<Goal {...testData}/>)
-        const button = screen.getByRole('button');
+        const button = screen.getByRole('button', {name: /Delete/, hidden: true});
 
         userEvent.click(button);
 
         expect(testData.deletionCallback.mock.calls).toHaveLength(1)
+    })
+
+    it("has a finished button", () => {
+        const currentDate = new Date();
+        const testData: GoalInput = {
+            name: "Drink water",
+            lastCompleted: currentDate,
+            type: TYPES.DAILY,
+            deletionCallback: () => {},
+            finishedCallback: jest.fn(() => {})
+        }
+        
+        render(<Goal {...testData}/>)
+        const button = screen.getByRole('button', {name: /Done/});
+
+        userEvent.click(button);
+
+        expect(testData.finishedCallback.mock.calls).toHaveLength(1)
     })
 })

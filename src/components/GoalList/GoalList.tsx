@@ -2,13 +2,15 @@ import React from "react";
 import Goal from "./Goal/Goal";
 import GoalInput from "../../interface/GoalInput";
 import { TYPES } from "../../constants/Goal";
+import GoalListInput from "../../interface/GoalListInput";
 
-function GoalList(): React.JSX.Element {
+function GoalList(prop: GoalListInput): React.JSX.Element {
     const dummyData: GoalInput = {
         name: "Drink water",
         type: TYPES.DAILY,
         lastCompleted: new Date(),
-        deletionCallback: () => {}
+        deletionCallback: () => {},
+        finishedCallback: () => {}
     }
     return (
         <div>

@@ -5,6 +5,7 @@ interface GoalInput {
     type: TYPES,
     lastCompleted: Date,
     deletionCallback: any
+    finishedCallback: any
 }
 
 export default GoalInput;

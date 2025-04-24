@@ -1,9 +1,9 @@
 {
-    "name": "Hello Extensions",
+    "name": "Goalkeeper",
     "description": "Extension to keep track of goals",
     "version": "1.0",
     "manifest_version": 3,
     "action": {
-      "default_popup": "hello.html"
+      "default_popup": "./build/index.html"
     }
   }
