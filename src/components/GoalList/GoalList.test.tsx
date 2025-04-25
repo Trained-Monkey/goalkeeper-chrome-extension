@@ -86,12 +86,14 @@ describe('GoalList', () => {
 
         let elements: HTMLElement[];
         let count = 0;
-        for (let buttons: HTMLElement[] = screen.queryAllByRole('button'); 
+        for (let buttons: HTMLElement[] = screen.queryAllByRole('button', {name: /Delete/}); 
                 buttons.length > 0; 
-                buttons = screen.queryAllByRole('button')){
+                buttons = screen.queryAllByRole('button', {name: /Delete/})){
             userEvent.click(buttons[0]);
             elements = screen.queryAllByText(/Goal #/);
             count += 1
+            
+            // elements.map(element => console.debug(element.textContent));
             expect(elements.length).toBe(testData.length - count);
         }
     })
@@ -105,10 +107,10 @@ describe('GoalList', () => {
         render(<GoalList goals={testData}/>)
 
         let goal3: HTMLElement = screen.getByText('Goal #3');
-        const parent: HTMLElement | null = goal3.parentElement;
+        const parent: HTMLElement | null | undefined = goal3.parentElement?.parentElement;
 
         // Feels kind of hacky to assert parent is not null
-        if (parent === null){
+        if (parent === null || parent === undefined){
             expect(parent).not.toBeNull();
             return;
         }
@@ -130,10 +132,10 @@ describe('GoalList', () => {
         render(<GoalList goals={testData}/>)
 
         let goal4: HTMLElement = screen.getByText('Goal #4');
-        const parent: HTMLElement | null = goal4.parentElement;
+        const parent: HTMLElement | null | undefined = goal4.parentElement?.parentElement;
 
         // Feels kind of hacky to assert parent is not null
-        if (parent === null){
+        if (parent === null || parent === undefined){
             expect(parent).not.toBeNull();
             return;
         }
