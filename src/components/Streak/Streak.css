@@ -3,3 +3,7 @@
     flex-direction: row;
     align-items: center;
 }
+
+.streak-container h1{
+    margin-bottom: 0px;
+}

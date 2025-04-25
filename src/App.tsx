@@ -26,9 +26,14 @@ function App() {
     ]
   }
   return (
-    <div className="App">
+    <div className="app">
       <GoalList {...testData}/>
-      <Streak {...{streakCounter: 10}}/>
+      <div className="manage-goal-container">
+        <Streak {...{streakCounter: 10}}/>
+        <div className="manage-goal-item"></div>
+
+      </div>
+      
     </div>
   );
 }
