@@ -1,6 +1,8 @@
 .App {
   /* text-align: center; */
-  background-color: #282c34;
-  min-height: 200px;
+  /* background-color: #282c34; */
+  min-height: 400px;
   display: flex;
+  padding: 20px;
+  width: 800px;
 }

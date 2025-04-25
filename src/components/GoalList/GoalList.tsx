@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Goal, {getDaysToIncrement} from "./Goal/Goal";
 import GoalInput from "../../interface/GoalInput";
 import GoalListInput from "../../interface/GoalListInput";
+import './GoalList.css';
 
 function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
     const currentDate = new Date();
@@ -67,8 +68,11 @@ function GoalList(prop: GoalListInput): React.JSX.Element {
     goals.sort((a, b) => goalExpiresBeforeGoal(a,b));
 
     return (
-        <div>
-            <h1>Goal List</h1>
+        <div className="goal-list-container">
+            <div className="goal-list header">
+                <h1>Goal List</h1>
+            </div>
+            
             <ul className="list-group">
                 {
                     goals.map((goal: GoalInput) => (

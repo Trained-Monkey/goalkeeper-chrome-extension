@@ -119,14 +119,30 @@ function Goal(prop: GoalInput): React.JSX.Element {
                 : "list-group-item") 
             + " goal-container"
         }>
-            <p className="goal-text"> {name} </p>
-            <p className="goal-text"> {type}</p>
-            <p className="goal-text"> {expiry} </p>
-            <button onClick={handleDeleteButtonClick} name="delete-button" 
-                className="btn btn-primary"> Delete </button>
+            <div className="goal-item-container text">
+                <p className="goal-text"> {name} </p>
+            </div>
+            <div className="goal-item-container text">
+                <p className="goal-text"> {type} </p>
+            </div>
+            <div className="goal-item-container text">
+                <p className="goal-text"> {expiry} </p>
+            </div>
+            <div className="goal-item-container button">
+                
+                {taskCompleted ? null : 
+                    <button onClick={handleSubmitButtonClick} name="submit-button" 
+                        className="btn btn-primary"> Done </button>
+                }
+            </div>
 
-            {taskCompleted ? null : <button onClick={handleSubmitButtonClick} name="submit-button" 
-                className="btn btn-primary"> Done </button>}
+            <div className="goal-item-container button">
+                <button onClick={handleDeleteButtonClick} name="delete-button" 
+                    className="btn btn-danger"> Delete </button>
+            </div>
+            
+
+            
         </li >
     )
 }

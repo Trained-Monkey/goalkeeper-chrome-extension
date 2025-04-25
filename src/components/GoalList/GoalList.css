@@ -1,0 +1,15 @@
+.goal-list.header{
+    text-align: center;
+    width: 100%;
+}
+
+.goal-list-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.goal-list-container .list-group {
+    display: flex;
+    align-items: center;
+}

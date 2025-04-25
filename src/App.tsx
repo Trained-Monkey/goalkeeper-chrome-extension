@@ -26,9 +26,7 @@ function App() {
   }
   return (
     <div className="App">
-      <header className="App-header">
-        <GoalList {...testData}/>
-      </header>
+      <GoalList {...testData}/>
     </div>
   );
 }

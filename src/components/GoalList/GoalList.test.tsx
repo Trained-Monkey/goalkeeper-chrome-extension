@@ -14,7 +14,6 @@ import userEvent from '@testing-library/user-event';
 
 function generateTestData() {
     let result = [];
-    const emptyCallback = () => {}
     result.push({
         name: 'Goal #1',
         type: TYPES.DAILY,
