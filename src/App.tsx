@@ -31,9 +31,9 @@ function App() {
       <GoalList {...testData}/>
       <div className="manage-goal-container">
         <Streak {...{streakCounter: 10}}/>
-        <div className="manage-goal-item">
-          <AddGoal/>
-        </div>
+        
+        <AddGoal/>
+        
 
       </div>
       
