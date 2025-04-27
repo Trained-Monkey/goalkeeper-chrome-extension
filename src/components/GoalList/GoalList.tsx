@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Goal, {getDaysToIncrement} from "./Goal/Goal";
 import GoalInput from "../../interface/GoalInput";
 import GoalListInput from "../../interface/GoalListInput";
+import { StreakContext } from "../../context/StreakContext";
 import './GoalList.css';
 
 function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
@@ -34,36 +35,10 @@ function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
     return 1;
 }
 
-function GoalList(prop: GoalListInput): React.JSX.Element {
-    const [rawGoals, setRawGoals] = useState(prop.goals);
-    // Attaching our callback functions to update state when respective buttons
-    // are clicked
-    const goals = rawGoals.map(prev => {
-        return {
-            ...prev,
-            deletionCallback: (goalToBeDeleted: string) => {
-                setRawGoals(prev => {
-                    return prev.filter(goal => {
-                        if (goal.name === goalToBeDeleted){
-                            return false;
-                        }
 
-                        return true;
-                    })
-                })
-            },
-            finishedCallback: (nextGoalState: GoalInput) => {
-                setRawGoals(prev => {
-                    return prev.map(goal => {
-                        if (goal.name === nextGoalState.name) {
-                            return nextGoalState;
-                        }
-                        return goal;
-                    })
-                })
-            }
-        }
-    })
+
+function GoalList(prop: GoalListInput): React.JSX.Element {
+    const {goals} = prop;
 
     goals.sort((a, b) => goalExpiresBeforeGoal(a,b));
 
@@ -83,5 +58,6 @@ function GoalList(prop: GoalListInput): React.JSX.Element {
         </div>
     )
 }
+
 
 export default GoalList;

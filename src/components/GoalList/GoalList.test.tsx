@@ -13,29 +13,37 @@ import { TYPES } from '../../constants/Goal';
 import userEvent from '@testing-library/user-event';
 
 function generateTestData() {
-    let result = [];
+    let result: GoalInput[] = [];
     result.push({
         name: 'Goal #1',
         type: TYPES.DAILY,
         lastCompleted: new Date(),
+        deletionCallback: () => {},
+        finishedCallback: () => {}
     })
 
     result.push({
         name: 'Goal #2',
         type: TYPES.WEEKLY,
         lastCompleted: new Date(),
+        deletionCallback: () => {},
+        finishedCallback: () => {}
     })
 
     result.push({
         name: 'Goal #3',
         type: TYPES.FORTNIGHTLY,
         lastCompleted: new Date(),
+        deletionCallback: () => {},
+        finishedCallback: () => {}
     })
 
     result.push({
         name: 'Goal #4',
         type: TYPES.DAILY,
         lastCompleted: new Date(Date.now() - (20 * 60 * 60 * 1000)),
+        deletionCallback: () => {},
+        finishedCallback: () => {}
     })
 
     return result;

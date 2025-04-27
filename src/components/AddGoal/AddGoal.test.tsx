@@ -3,10 +3,12 @@ import AddGoal from "./AddGoal";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
 import userEvent from "@testing-library/user-event";
+import GoalInput from "../../interface/GoalInput";
 
 describe("AddGoal", () => {
     it("exists as a clickable button", () => {
-        render(<AddGoal/>);
+        const callback = jest.fn(() => {});
+        render(<AddGoal addGoalCallback={callback}/>);
 
         const button: HTMLElement = screen.getByRole('button', {
             name: /Add Goal/
@@ -17,7 +19,8 @@ describe("AddGoal", () => {
     })
 
     it("creates a modal", () => {
-        render(<AddGoal/>);
+        const callback = jest.fn(() => {});
+        render(<AddGoal addGoalCallback={callback}/>);
 
         const button: HTMLElement = screen.getByRole('button', {
             name: /Add Goal/
@@ -26,6 +29,7 @@ describe("AddGoal", () => {
         let modal: HTMLElement = screen.getByRole('dialog');
         expect(modal).not.toBeInTheDocument();
         fireEvent.click(button);
+        expect(callback.mock.calls).toBe(1);
 
         modal = screen.getByRole('dialog');
         expect(modal).toBeInTheDocument();

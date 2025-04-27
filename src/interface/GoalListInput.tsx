@@ -2,11 +2,7 @@ import { TYPES } from "../constants/Goal";
 import GoalInput from "./GoalInput";
 
 interface GoalListInput {
-    goals: {
-        name: string,
-        type: TYPES
-        lastCompleted: Date
-    }[]
+    goals: GoalInput[]
 }
 
 export default GoalListInput;
