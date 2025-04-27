@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import StreakInput from "../../interface/StreakInput";
 import "./Streak.css";
-// const logo = require("../../../public/fire.svg") as string;
+import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
+import fireLitImg from "../../assets/Streak/fire-lit.svg";
 
 function Streak(prop: StreakInput): React.JSX.Element {
     const { streakCounter } = prop;
@@ -9,8 +10,10 @@ function Streak(prop: StreakInput): React.JSX.Element {
 
     return (<div className="streak-container manage-goal-item"> 
         <h1>{streak === 0 ? null : streak} </h1>
-        <img src="/fire.svg" alt="Fire icon" width="50" height="50"/>
-
+        <img src={
+                streak === 0 ? fireUnlitImg: fireLitImg
+            } 
+            alt="Fire icon" width="50" height="50"/>
     </div>);
 }
 
