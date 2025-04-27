@@ -4,6 +4,7 @@ import GoalList from './components/GoalList/GoalList';
 import GoalListInput from './interface/GoalListInput';
 import { TYPES } from './constants/Goal';
 import Streak from './components/Streak/Streak';
+import AddGoal from './components/AddGoal/AddGoal';
 
 function App() {
   const testData: GoalListInput = {
@@ -30,7 +31,9 @@ function App() {
       <GoalList {...testData}/>
       <div className="manage-goal-container">
         <Streak {...{streakCounter: 10}}/>
-        <div className="manage-goal-item"></div>
+        <div className="manage-goal-item">
+          <AddGoal/>
+        </div>
 
       </div>
       
