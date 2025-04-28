@@ -1,18 +1,38 @@
+import { TYPES } from "../constants/Goal";
 
 let storage: chrome.storage.LocalStorageArea | testStorage;
 
 class testStorage {
-    storage: {[key: string]: any};
+    storage: { [key: string]: any };
 
     constructor() {
         this.storage = {
-            "streakCounter": 0
+            "streakCounter": 0,
+            "goals": [
+                {
+                    name: "Drink water",
+                    type: TYPES.DAILY,
+                    lastCompleted: new Date(),
+                },
+                {
+                    name: "Drink water1",
+                    type: TYPES.FORTNIGHTLY,
+                    lastCompleted: new Date(),
+                },
+                {
+                    name: "Drink water2",
+                    type: TYPES.WEEKLY,
+                    lastCompleted: new Date(),
+                }
+
+            ]
+
         };
     }
 
-    get(keyDict: { [s: string]: string; } ): Promise<object> {
+    get(keyDict: { [s: string]: string; }): Promise<object> {
         return new Promise((resolve, reject) => {
-            let result: { [s: string]: string; }  = {};
+            let result: { [s: string]: string; } = {};
             for (const [key, value] of Object.entries(keyDict)) {
                 if (this.storage[key] == null) {
                     result[key] = value;
@@ -22,6 +42,14 @@ class testStorage {
             }
             resolve(result);
         });
+    }
+
+    set(keyValue: { [s: string]: string; }): Promise<object> {
+        return new Promise((resolve, reject) => {
+            for (const [key, value] of Object.entries(keyValue)) {
+                this.storage[key] = value;
+            }
+        })
     }
 }
 
@@ -40,15 +68,16 @@ export function getFromStoragePromise(key: { [s: string]: any; }): Promise<{ [ke
         return null;
     }
 
-    return storage?.get(key);
+    return storage.get(key);
 }
 
-export function storeInStorage() {
+export function storeInStorage(keyValues: { [key: string]: any }) {
     if (storage == null) {
         console.error("Chrome extension not accessible,\
         ensure webpage is being ran as an extension.");
         return null;
     }
 
+    storage.set(keyValues);
 }
 

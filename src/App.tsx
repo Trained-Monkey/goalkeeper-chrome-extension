@@ -1,47 +1,61 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import GoalList from './components/GoalList/GoalList';
-import GoalListInput from './interface/GoalListInput';
 import { TYPES } from './constants/Goal';
 import Streak from './components/Streak/Streak';
 import AddGoal from './components/AddGoal/AddGoal';
-import { StreakContext } from './context/StreakContext';
 import GoalInput from './interface/GoalInput';
+import { getFromStoragePromise, storeInStorage } from './utils/ChromeStorage';
 
 function App() {
-  const [storedGoals, setStoredGoals] = useState([
-    {
-      name: "Drink water",
-      type: TYPES.DAILY,
-      lastCompleted: new Date(),
-    },
-    {
-      name: "Drink water1",
-      type: TYPES.FORTNIGHTLY,
-      lastCompleted: new Date(),
-    },
-    {
-      name: "Drink water2",
-      type: TYPES.WEEKLY,
-      lastCompleted: new Date(),
-    }
-  ])
+  const emptyList: any[] = [];
+  const [storedGoals, setStoredGoals] = useState(emptyList);
 
-  // Attaching our callbacks
-  const testData: GoalInput[] = 
+  const [loaded, setLoaded] = useState(false);
+
+  // Get our stored goals data from storage
+  useEffect(() => {
+    getFromStoragePromise({ 'goals': [] })?.then((result) => {
+      const goals = result['goals'].map(((goal: any) => {
+        const result = {...goal}
+        result.lastCompleted = new Date(goal.lastCompleted.toString());
+        return result;
+      }))
+      setStoredGoals(goals);
+      setLoaded(true);
+      console.log(result['goals']);
+    })
+
+  }, [])
+
+  useEffect(() => {
+    if (loaded){
+      const formattedGoals = storedGoals.map((goal: any) => {
+        const result = {...goal};
+        result.lastCompleted = goal.lastCompleted.toString();
+        return result;
+      })
+      storeInStorage({goals: formattedGoals});
+    }
+    
+  }, [storedGoals, loaded])
+
+  // Attaching our callbacks for marking and deleting goal
+  const testData: GoalInput[] =
     storedGoals.map((prev, index) => {
-      return {...prev, 
+      return {
+        ...prev,
         deletionCallback: () => {
           setStoredGoals(prevStoredGoals => {
             return prevStoredGoals.filter((_, prevIndex) => {
-                return prevIndex !== index;
+              return prevIndex !== index;
             });
           })
         },
         finishedCallback: (nextGoalState: GoalInput) => {
           setStoredGoals(prevStoredGoals => {
             return prevStoredGoals.map((oldGoalState, prevIndex) => {
-              if (prevIndex == index){
+              if (prevIndex === index) {
                 return nextGoalState
               }
 
@@ -52,29 +66,19 @@ function App() {
       }
     })
 
-    const addGoal = (newGoal:GoalInput) => {
-      setStoredGoals(prev => [...prev, newGoal])
-    }
-  
+  const addGoal = (newGoal: GoalInput) => {
+    setStoredGoals(prev => [...prev, newGoal])
+  }
 
-  // Create our raw goals state here
-  const [lastCompleted, setLastCompleted] = useState(new Date());
-
-  // Get initial state from chrome cookies
-
-  // Contexts needed
-  // - Streak counter
-  // - Modal open
   return (
     <div className="app">
-      
-      <GoalList goals={testData}/>
+
+      <GoalList goals={testData} />
       <div className="manage-goal-container">
-        <Streak goals={testData}/>
-        <AddGoal addGoalCallback={addGoal}/>
-        
+        <Streak goals={testData} />
+        <AddGoal addGoalCallback={addGoal} />
       </div>
-      
+
     </div>
   );
 }
