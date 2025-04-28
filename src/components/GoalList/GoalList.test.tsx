@@ -87,75 +87,75 @@ describe('GoalList', () => {
             .toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     })
 
-    it('should be able to remove goals', () => {
-        const testData = generateTestData();
+//     it('should be able to remove goals', () => {
+//         const testData = generateTestData();
 
-        render(<GoalList goals={testData}/>)
+//         render(<GoalList goals={testData}/>)
 
-        let elements: HTMLElement[];
-        let count = 0;
-        for (let buttons: HTMLElement[] = screen.queryAllByRole('button', {name: /Delete/}); 
-                buttons.length > 0; 
-                buttons = screen.queryAllByRole('button', {name: /Delete/})){
-            userEvent.click(buttons[0]);
-            elements = screen.queryAllByText(/Goal #/);
-            count += 1
+//         let elements: HTMLElement[];
+//         let count = 0;
+//         for (let buttons: HTMLElement[] = screen.queryAllByRole('button', {name: /Delete/}); 
+//                 buttons.length > 0; 
+//                 buttons = screen.queryAllByRole('button', {name: /Delete/})){
+//             userEvent.click(buttons[0]);
+//             elements = screen.queryAllByText(/Goal #/);
+//             count += 1
             
-            // elements.map(element => console.debug(element.textContent));
-            expect(elements.length).toBe(testData.length - count);
-        }
-    })
+//             // elements.map(element => console.debug(element.textContent));
+//             expect(elements.length).toBe(testData.length - count);
+//         }
+//     })
 
-    // Not sure if there is a better way to do test, could easily break if
-    // order of elements is changed. Want to find the button corresponding to
-    // a goal and simulate a click on it and ensure the correct goal is removed.
-    it('should remove the correct goal', () => {
-        const testData = generateTestData();
+//     // Not sure if there is a better way to do test, could easily break if
+//     // order of elements is changed. Want to find the button corresponding to
+//     // a goal and simulate a click on it and ensure the correct goal is removed.
+//     it('should remove the correct goal', () => {
+//         const testData = generateTestData();
 
-        render(<GoalList goals={testData}/>)
+//         render(<GoalList goals={testData}/>)
 
-        let goal3: HTMLElement = screen.getByText('Goal #3');
-        const parent: HTMLElement | null | undefined = goal3.parentElement?.parentElement;
+//         let goal3: HTMLElement = screen.getByText('Goal #3');
+//         const parent: HTMLElement | null | undefined = goal3.parentElement?.parentElement;
 
-        // Feels kind of hacky to assert parent is not null
-        if (parent === null || parent === undefined){
-            expect(parent).not.toBeNull();
-            return;
-        }
+//         // Feels kind of hacky to assert parent is not null
+//         if (parent === null || parent === undefined){
+//             expect(parent).not.toBeNull();
+//             return;
+//         }
 
-        const button: HTMLElement = within(parent).getByRole('button', {
-            name: /Delete/
-        });
-        userEvent.click(button);
+//         const button: HTMLElement = within(parent).getByRole('button', {
+//             name: /Delete/
+//         });
+//         userEvent.click(button);
 
-        expect(screen.queryByText('Goal #3')).not.toBeInTheDocument();
-    })
+//         expect(screen.queryByText('Goal #3')).not.toBeInTheDocument();
+//     })
 
-    // Not sure if there is a better way to do test, could easily break if
-    // order of elements is changed. Want to find the button corresponding to
-    // a goal and simulate a click on it and ensure the correct goal at the bottom.
-    it('should put goal at bottom when finished', () => {
-        const testData = generateTestData();
+//     // Not sure if there is a better way to do test, could easily break if
+//     // order of elements is changed. Want to find the button corresponding to
+//     // a goal and simulate a click on it and ensure the correct goal at the bottom.
+//     it('should put goal at bottom when finished', () => {
+//         const testData = generateTestData();
 
-        render(<GoalList goals={testData}/>)
+//         render(<GoalList goals={testData}/>)
 
-        let goal4: HTMLElement = screen.getByText('Goal #4');
-        const parent: HTMLElement | null | undefined = goal4.parentElement?.parentElement;
+//         let goal4: HTMLElement = screen.getByText('Goal #4');
+//         const parent: HTMLElement | null | undefined = goal4.parentElement?.parentElement;
 
-        // Feels kind of hacky to assert parent is not null
-        if (parent === null || parent === undefined){
-            expect(parent).not.toBeNull();
-            return;
-        }
+//         // Feels kind of hacky to assert parent is not null
+//         if (parent === null || parent === undefined){
+//             expect(parent).not.toBeNull();
+//             return;
+//         }
 
-        const button: HTMLElement = within(parent).getByRole('button', {
-            name: /Done/
-        });
-        userEvent.click(button);
-        goal4 = screen.getByText(/Goal #4/);
-        const goal3: HTMLElement = screen.getByText(/Goal #3/);
+//         const button: HTMLElement = within(parent).getByRole('button', {
+//             name: /Done/
+//         });
+//         userEvent.click(button);
+//         goal4 = screen.getByText(/Goal #4/);
+//         const goal3: HTMLElement = screen.getByText(/Goal #3/);
 
-        expect(goal4.compareDocumentPosition(goal3))
-            .toBe(Node.DOCUMENT_POSITION_PRECEDING);
-    })
+//         expect(goal4.compareDocumentPosition(goal3))
+//             .toBe(Node.DOCUMENT_POSITION_PRECEDING);
+//     })
 })

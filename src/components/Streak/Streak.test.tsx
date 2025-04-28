@@ -3,6 +3,7 @@ import Streak from './Streak';
 import StreakInput from '../../interface/StreakInput';
 import React from 'react';
 import { StreakContext } from '../../context/StreakContext';
+// chrome.
 
 describe('Streak', () => {
     it("should not show a number when there is no streak", () => {

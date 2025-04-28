@@ -5,5 +5,8 @@
     "manifest_version": 3,
     "action": {
       "default_popup": "./build/index.html"
-    }
+    },
+    "permissions": [
+      "storage"
+    ]
   }

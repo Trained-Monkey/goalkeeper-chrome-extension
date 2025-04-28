@@ -1,10 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import StreakInput from "../../interface/StreakInput";
 import "./Streak.css";
 import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
 import fireLitImg from "../../assets/Streak/fire-lit.svg";
 import { StreakContext } from "../../context/StreakContext";
 import GoalInput from "../../interface/GoalInput";
+// import 'chrome';
+import { getFromStoragePromise } from "../../utils/ChromeStorage";
 
 function getMidnight(date: Date): Date{
     const result = new Date(date);
@@ -12,8 +14,19 @@ function getMidnight(date: Date): Date{
     return result;
 }
 
-function getStreak(): number{
-    return 0;
+function getStreak(setStreakCounter: (newStreakCounter: number) => void){
+    getFromStoragePromise({streakCounter: 0 })?.then((result) => {
+        console.log(result);
+        if (result["streakCounter"] == null) {
+            return;
+        }
+        
+        setStreakCounter(result["streakCounter"]);
+    })
+}
+
+function storeStreak(streakCounter: number) {
+
 }
 
 // Read from chrome storage
@@ -22,8 +35,15 @@ function getLastCompleted(): Date {
 }
 
 function Streak(props: StreakInput): React.JSX.Element {
-    const [streakCounter, setStreakCounter] = useState(getStreak());
+    const [streakCounter, setStreakCounter] = useState(0);
+
     const [lastCompleted, setLastCompleted] = useState(getLastCompleted());
+
+    useEffect(() => {
+        getStreak(setStreakCounter);
+
+        return () => {storeStreak(streakCounter)};
+    }, [])
 
     // Get goals from props and determine if we are meant to increment streak
     // counter
