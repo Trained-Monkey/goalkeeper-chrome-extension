@@ -1,0 +1,5 @@
+describe("AddGoalModal", () => {
+    it("exits", () => {
+        
+    })
+})

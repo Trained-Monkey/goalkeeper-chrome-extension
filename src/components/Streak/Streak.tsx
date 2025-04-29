@@ -3,7 +3,6 @@ import StreakInput from "../../interface/StreakInput";
 import "./Streak.css";
 import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
 import fireLitImg from "../../assets/Streak/fire-lit.svg";
-import { StreakContext } from "../../context/StreakContext";
 import GoalInput from "../../interface/GoalInput";
 // import 'chrome';
 import { getFromStoragePromise } from "../../utils/ChromeStorage";

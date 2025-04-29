@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import Goal, {getDaysToIncrement} from "./Goal/Goal";
 import GoalInput from "../../interface/GoalInput";
 import GoalListInput from "../../interface/GoalListInput";
-import { StreakContext } from "../../context/StreakContext";
 import './GoalList.css';
 
 function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
