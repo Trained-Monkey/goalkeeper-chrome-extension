@@ -1,7 +1,8 @@
+import Goal from "./Goal";
 import GoalInput from "./GoalInput";
 
 interface StreakInput {
-    goals: GoalInput[],
+    goals: Goal[],
 }
 
 export default StreakInput;

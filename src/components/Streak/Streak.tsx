@@ -4,8 +4,8 @@ import "./Streak.css";
 import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
 import fireLitImg from "../../assets/Streak/fire-lit.svg";
 import GoalInput from "../../interface/GoalInput";
-// import 'chrome';
 import { getFromStoragePromise } from "../../utils/ChromeStorage";
+import Goal from "../../interface/Goal";
 
 function getMidnight(date: Date): Date{
     const result = new Date(date);
@@ -15,7 +15,6 @@ function getMidnight(date: Date): Date{
 
 function getStreak(setStreakCounter: (newStreakCounter: number) => void){
     getFromStoragePromise({streakCounter: 0 })?.then((result) => {
-        console.log(result);
         if (result["streakCounter"] == null) {
             return;
         }
@@ -48,7 +47,7 @@ function Streak(props: StreakInput): React.JSX.Element {
     // counter
     const { goals }  = props;
     const currentDate = new Date();
-    const counter = goals.reduce((curr: number, acc: GoalInput) => {
+    const counter = goals.reduce((curr: number, acc: Goal) => {
         if (acc.lastCompleted < currentDate){
             return curr + 1;
         }

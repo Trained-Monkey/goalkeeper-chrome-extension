@@ -75,7 +75,7 @@ function App() {
 
       <GoalList goals={testData} />
       <div className="manage-goal-container">
-        <Streak goals={testData} />
+        <Streak goals={storedGoals} />
         <AddGoal addGoalCallback={addGoal} />
       </div>
 
