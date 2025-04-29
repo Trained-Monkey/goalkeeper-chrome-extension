@@ -12,4 +12,8 @@
 .goal-list-container .list-group {
     display: flex;
     align-items: center;
+    min-height: 388px;
+    max-height: 388px;
+    border: 1px solid grey;
+    overflow: scroll;
 }

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
+// Components
 import GoalList from './components/GoalList/GoalList';
-import { TYPES } from './constants/Goal';
 import Streak from './components/Streak/Streak';
 import AddGoal from './components/AddGoal/AddGoal';
+// Interfaces
 import GoalInput from './interface/GoalInput';
+import Goal from './interface/Goal';
+// Misc
 import { getFromStoragePromise, storeInStorage } from './utils/ChromeStorage';
+import './App.css';
 
 function App() {
   const emptyList: any[] = [];
@@ -17,27 +20,26 @@ function App() {
   useEffect(() => {
     getFromStoragePromise({ 'goals': [] })?.then((result) => {
       const goals = result['goals'].map(((goal: any) => {
-        const result = {...goal}
+        const result = { ...goal }
         result.lastCompleted = new Date(goal.lastCompleted.toString());
         return result;
       }))
       setStoredGoals(goals);
       setLoaded(true);
-      console.log(result['goals']);
     })
 
   }, [])
 
   useEffect(() => {
-    if (loaded){
+    if (loaded) {
       const formattedGoals = storedGoals.map((goal: any) => {
-        const result = {...goal};
+        const result = { ...goal };
         result.lastCompleted = goal.lastCompleted.toString();
         return result;
       })
-      storeInStorage({goals: formattedGoals});
+      storeInStorage({ goals: formattedGoals });
     }
-    
+
   }, [storedGoals, loaded])
 
   // Attaching our callbacks for marking and deleting goal
@@ -66,8 +68,14 @@ function App() {
       }
     })
 
-  const addGoal = (newGoal: GoalInput) => {
-    setStoredGoals(prev => [...prev, newGoal])
+  const addGoal = (newGoal: Goal) => {
+    setStoredGoals(prev => [...prev, {
+      ...newGoal,
+      // These two callbacks will be automatically attached once component is
+      // reloaded
+      finishedCallback: () => {},
+      deletionCallback: () => {}
+    }])
   }
 
   return (

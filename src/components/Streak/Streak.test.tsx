@@ -26,6 +26,9 @@ describe('Streak', () => {
     it("should not show a number when there is no streak", async () => {
         const mockFn = jest.spyOn(chrome.storage.local, "get");
         // @ts-ignore
+        jest.spyOn(chrome.storage.local, "set").mockResolvedValue({});
+
+        // @ts-ignore
         mockFn.mockResolvedValue({streakCounter: 0});
         const contextValue: StreakInput = {
             goals: dummyUnfinishedGoalsData,
@@ -42,7 +45,9 @@ describe('Streak', () => {
     it("should show the streak count when there is a streak", async () => {
         const exampleStreak: number = 20;
         const mockFn = jest.spyOn(chrome.storage.local, "get");
-        //@ts-ignore
+        // @ts-ignore
+        jest.spyOn(chrome.storage.local, "set").mockResolvedValue({});
+        // @ts-ignore
         mockFn.mockResolvedValue({streakCounter: exampleStreak});
         const contextValue: StreakInput = {
             goals: dummyUnfinishedGoalsData,
@@ -60,7 +65,11 @@ describe('Streak', () => {
     it("should increment the streak count when all the goals today are done", async () => {
         const exampleStreak: number = 20;
         const mockFn = jest.spyOn(chrome.storage.local, "get");
-        //@ts-ignore
+
+        // @ts-ignore
+        jest.spyOn(chrome.storage.local, "set").mockResolvedValue({});
+
+        // @ts-ignore
         mockFn.mockResolvedValue({streakCounter: exampleStreak});
         const contextValue: StreakInput = {
             goals: dummyFinishedGoalsData,
@@ -68,10 +77,15 @@ describe('Streak', () => {
 
         render(<Streak {...contextValue} />);        
 
+        // Test seems to take 10x as long when ran in the background sometimes
+        // causing it to fail cause of timeout
         await waitFor(async () => {
             expect(mockFn).toHaveBeenCalledTimes(1);
+        })
+
+        await waitFor(async () => {
             const element: HTMLElement = await screen.findByText((exampleStreak + 1).toString());
             expect(element).toBeInTheDocument();
-        })
+        }, { timeout: 5000 })
     })
 })

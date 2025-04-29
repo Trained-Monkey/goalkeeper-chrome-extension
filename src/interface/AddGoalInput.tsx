@@ -1,7 +1,7 @@
-import GoalInput from "./GoalInput";
+import Goal from "./Goal";
 
 interface AddGoalInput {
-    addGoalCallback: (newGoal: GoalInput) => void
+    addGoalCallback: (newGoal: Goal) => void
 }
 
 export default AddGoalInput;

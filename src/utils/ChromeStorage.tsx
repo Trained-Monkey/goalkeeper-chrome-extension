@@ -1,5 +1,4 @@
 import { TYPES } from "../constants/Goal";
-import { log, error } from "console";
 
 
 let storage: chrome.storage.LocalStorageArea | testStorage;
@@ -63,8 +62,8 @@ class testStorage {
 //         }
 //     }
 // };
-log("global.chrome: ");
-log(global.chrome);
+// log("global.chrome: ");
+// log(global.chrome);
 // throw new Error();
 if (process.env.NODE_ENV === 'development') {
     console.log('Dev mode detected, running testStorage instead of accessing chrome api');
