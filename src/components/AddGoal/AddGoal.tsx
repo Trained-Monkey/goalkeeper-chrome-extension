@@ -27,11 +27,6 @@ function AddGoal(prop: AddGoalInput): React.JSX.Element {
         }
     }
 
-    useEffect(() => {
-        console.log(modalState);
-    }, [modalState])
-
-
     return (
         <div className="manage-goal-item add-goal" >
             <button className="btn btn-primary" onClick={openModal}>

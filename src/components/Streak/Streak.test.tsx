@@ -5,6 +5,7 @@ import React from 'react';
 import Streak from './Streak';
 import { TYPES } from '../../constants/Goal';
 import Goal from '../../interface/Goal';
+import StreakStoredData from '../../interface/StreakStoredData';
 
 const dummyUnfinishedGoalsData: Goal[] = [
     {
@@ -43,7 +44,7 @@ describe('Streak', () => {
         const mockFn = jest.spyOn(chrome.storage.local, "get");
         jest.spyOn(chrome.storage.local, "set").mockImplementation(()=> Promise.resolve({}));
 
-        mockFn.mockImplementation(()=> Promise.resolve({streakCounter: 0}));
+        mockFn.mockImplementation(()=> Promise.resolve({counter: 0}));
 
         const contextValue: StreakInput = {
             goals: dummyUnfinishedGoalsData,
@@ -59,10 +60,16 @@ describe('Streak', () => {
 
     it("should show the streak count when there is a streak", async () => {
         const exampleStreak: number = 20;
-        const mockFn = jest.spyOn(chrome.storage.local, "get");
-        jest.spyOn(chrome.storage.local, "set").mockImplementation(()=> Promise.resolve({}));
+        const mockGetter = jest.spyOn(chrome.storage.local, "get");
+        const mockSetter = jest.spyOn(chrome.storage.local, "set");
+        const mockGetterReturn: StreakStoredData = {
+            counter: exampleStreak,
+            lastCompleted: new Date().toString()
+        }
 
-        mockFn.mockImplementation(()=> Promise.resolve({streakCounter: exampleStreak}));
+        mockSetter.mockImplementation(()=> Promise.resolve({}));
+        mockGetter.mockImplementation(()=> Promise.resolve(mockGetterReturn));
+
         const contextValue: StreakInput = {
             goals: dummyUnfinishedGoalsData,
         }
@@ -70,7 +77,7 @@ describe('Streak', () => {
         render(<Streak {...contextValue} />);        
 
         await waitFor(async () => {
-            expect(mockFn).toHaveBeenCalledTimes(1);
+            expect(mockGetter).toHaveBeenCalledTimes(1);
             const element: HTMLElement = await screen.findByText(exampleStreak.toString());
             expect(element).toBeInTheDocument();
         })
@@ -78,11 +85,16 @@ describe('Streak', () => {
 
     it("should increment the streak count when all the goals today are done", async () => {
         const exampleStreak: number = 20;
-        const mockFn = jest.spyOn(chrome.storage.local, "get");
+        const mockGetter = jest.spyOn(chrome.storage.local, "get");
+        const mockSetter = jest.spyOn(chrome.storage.local, "set");
+        const mockGetterReturn: StreakStoredData = {
+            counter: exampleStreak,
+            lastCompleted: new Date().toString()
+        }
 
-        jest.spyOn(chrome.storage.local, "set").mockImplementation(()=> Promise.resolve({}))
+        mockSetter.mockImplementation(()=> Promise.resolve({}));
+        mockGetter.mockImplementation(()=> Promise.resolve(mockGetterReturn));
 
-        mockFn.mockImplementation(()=> Promise.resolve({streakCounter: exampleStreak}));
         const contextValue: StreakInput = {
             goals: dummyFinishedGoalsData,
         }
@@ -92,7 +104,7 @@ describe('Streak', () => {
         // Test seems to take 10x as long when ran in the background sometimes
         // causing it to fail cause of timeout
         await waitFor(async () => {
-            expect(mockFn).toHaveBeenCalledTimes(1);
+            expect(mockGetter).toHaveBeenCalledTimes(1);
         })
 
         await waitFor(async () => {

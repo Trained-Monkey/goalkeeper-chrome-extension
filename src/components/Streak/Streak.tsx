@@ -5,6 +5,7 @@ import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
 import fireLitImg from "../../assets/Streak/fire-lit.svg";
 import { getFromStoragePromise, storeInStorage } from "../../utils/ChromeStorage";
 import Goal from "../../interface/Goal";
+import StreakStoredData from "../../interface/StreakStoredData";
 
 function getMidnight(date: Date): Date {
     const result = new Date(date);
@@ -13,7 +14,7 @@ function getMidnight(date: Date): Date {
 }
 
 function getStreakFromStorage(initialState: any, callback: any): void {
-    const storageQuery = {
+    const storageQuery: StreakStoredData = {
         counter: initialState.counter,
         lastCompleted: initialState.lastCompleted.toString()
     };
@@ -28,7 +29,7 @@ function getStreakFromStorage(initialState: any, callback: any): void {
 }
 
 function storeStreakInStorage(state: any): void {
-    const storageQuery = {
+    const storageQuery: StreakStoredData = {
         counter: state.counter,
         lastCompleted: state.lastCompleted.toString()
     }
@@ -43,7 +44,7 @@ function Streak(props: StreakInput): React.JSX.Element {
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        const callback = (value: any) => {
+        const callback = (value: StreakStoredData) => {
             setStreak(prev => {
                 return {
                     ...prev,

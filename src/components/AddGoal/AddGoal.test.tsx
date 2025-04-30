@@ -32,7 +32,7 @@ describe("AddGoal", () => {
 
         await waitFor(async () => {
             // TODO: Check why hidden isnt being removed on button click
-            modal = screen.queryByRole('dialog', {hidden: true});
+            modal = screen.queryByRole('dialog');
             expect(modal).toBeInTheDocument();
         }, { timeout: 2000 })
 
