@@ -21,15 +21,30 @@ const dummyFinishedGoalsData: Goal[] = [
         lastCompleted: new Date(Date.now() + 24 * 60 * 60 * 1000)
     }
 ]
-
 describe('Streak', () => {
+    it("should by default has no streak", async () => {
+        const mockFn = jest.spyOn(chrome.storage.local, "get");
+        jest.spyOn(chrome.storage.local, "set").mockImplementation(()=> Promise.resolve({}));
+
+        mockFn.mockImplementation(()=> Promise.resolve({}));
+
+        const contextValue: StreakInput = {
+            goals: dummyUnfinishedGoalsData,
+        }
+
+        render(<Streak {...contextValue} />);
+
+        await waitFor(() => {
+            expect(mockFn).toHaveBeenCalledTimes(1);
+            expect(screen.queryByText(/[0-9]+/)).not.toBeInTheDocument();
+        })
+    })
     it("should not show a number when there is no streak", async () => {
         const mockFn = jest.spyOn(chrome.storage.local, "get");
-        // @ts-ignore
-        jest.spyOn(chrome.storage.local, "set").mockResolvedValue({});
+        jest.spyOn(chrome.storage.local, "set").mockImplementation(()=> Promise.resolve({}));
 
-        // @ts-ignore
-        mockFn.mockResolvedValue({streakCounter: 0});
+        mockFn.mockImplementation(()=> Promise.resolve({streakCounter: 0}));
+
         const contextValue: StreakInput = {
             goals: dummyUnfinishedGoalsData,
         }
@@ -45,10 +60,9 @@ describe('Streak', () => {
     it("should show the streak count when there is a streak", async () => {
         const exampleStreak: number = 20;
         const mockFn = jest.spyOn(chrome.storage.local, "get");
-        // @ts-ignore
-        jest.spyOn(chrome.storage.local, "set").mockResolvedValue({});
-        // @ts-ignore
-        mockFn.mockResolvedValue({streakCounter: exampleStreak});
+        jest.spyOn(chrome.storage.local, "set").mockImplementation(()=> Promise.resolve({}));
+
+        mockFn.mockImplementation(()=> Promise.resolve({streakCounter: exampleStreak}));
         const contextValue: StreakInput = {
             goals: dummyUnfinishedGoalsData,
         }
@@ -66,11 +80,9 @@ describe('Streak', () => {
         const exampleStreak: number = 20;
         const mockFn = jest.spyOn(chrome.storage.local, "get");
 
-        // @ts-ignore
-        jest.spyOn(chrome.storage.local, "set").mockResolvedValue({});
+        jest.spyOn(chrome.storage.local, "set").mockImplementation(()=> Promise.resolve({}))
 
-        // @ts-ignore
-        mockFn.mockResolvedValue({streakCounter: exampleStreak});
+        mockFn.mockImplementation(()=> Promise.resolve({streakCounter: exampleStreak}));
         const contextValue: StreakInput = {
             goals: dummyFinishedGoalsData,
         }
