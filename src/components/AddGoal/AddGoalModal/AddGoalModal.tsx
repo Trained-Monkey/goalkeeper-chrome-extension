@@ -5,10 +5,9 @@ import "./AddGoalModal.css";
 
 
 function AddGoalModal(props: any) {
-    const modalTriggered = props.modalState;
-    const closeModal = props.closeModal;
+  const closeModal = props.closeModal;
 
-    const myRef = useRef(null);
+  const myRef = useRef(null);
 
   useEffect(() => {
     // Access the DOM node using myRef.current
@@ -21,23 +20,15 @@ function AddGoalModal(props: any) {
     // }
   }, []);
 
-    return (
-        <div className="modal fade" tabIndex={-1} id="addGoalModal" role="dialog" aria-hidden="true">
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h4 className="modal-title">Modal title</h4>
-                </div>
-                <div className="modal-body">
-                  <p>One fine body&hellip;</p>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-default" data-bs-dismiss="modal">Close</button>
-                  <button type="button" className="btn btn-primary">Save changes</button>
-                </div>
-              </div>
-            </div>
-          </div>)
+  return (
+    <div onClick={closeModal} className="modal fade show bd-example-modal-lg" tabIndex={-1} role="dialog">
+      <div className="modal-dialog modal-lg">
+        <div className="modal-content">
+          ...
+        </div>
+      </div>
+      {createPortal(<div onClick={closeModal} className="modal-backdrop show"></div>, document.body)}
+    </div>)
 }
 
 export default AddGoalModal;
