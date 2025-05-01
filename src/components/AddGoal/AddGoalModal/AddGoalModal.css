@@ -5,3 +5,7 @@
 .modal-open {
     overflow: hidden;
 }
+
+.react-datepicker-wrapper {
+    display: flex;
+}

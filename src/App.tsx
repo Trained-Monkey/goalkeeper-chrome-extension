@@ -43,7 +43,7 @@ function App() {
   }, [storedGoals, loaded])
 
   // Attaching our callbacks for marking and deleting goal
-  const testData: GoalInput[] =
+  const goalsWithCallback: GoalInput[] =
     storedGoals.map((prev, index) => {
       return {
         ...prev,
@@ -57,6 +57,7 @@ function App() {
         finishedCallback: (nextGoalState: GoalInput) => {
           setStoredGoals(prevStoredGoals => {
             return prevStoredGoals.map((oldGoalState, prevIndex) => {
+              console.log(oldGoalState, nextGoalState);
               if (prevIndex === index) {
                 return nextGoalState
               }
@@ -68,20 +69,24 @@ function App() {
       }
     })
 
+  console.log(goalsWithCallback);
+
   const addGoal = (newGoal: Goal) => {
     setStoredGoals(prev => [...prev, {
       ...newGoal,
       // These two callbacks will be automatically attached once component is
       // reloaded
-      finishedCallback: () => {},
-      deletionCallback: () => {}
+      finishedCallback: () => {
+        console.log("New callback not attached")
+      },
+      deletionCallback: () => { }
     }])
   }
 
   return (
     <div className="app">
 
-      <GoalList goals={testData} />
+      <GoalList goals={goalsWithCallback} />
       <div className="manage-goal-container">
         <Streak goals={storedGoals} />
         <AddGoal addGoalCallback={addGoal} />

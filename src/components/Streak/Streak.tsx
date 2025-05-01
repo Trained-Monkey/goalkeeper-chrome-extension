@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import StreakInput from "../../interface/StreakInput";
 import "./Streak.css";
 import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
@@ -37,10 +37,11 @@ function storeStreakInStorage(state: any): void {
 }
 
 function Streak(props: StreakInput): React.JSX.Element {
-    const [streak, setStreak] = useState({
+    const defaultStreakValue = useRef({
         counter: 0,
         lastCompleted: new Date(Date.UTC(0, 0, 0, 0, 0, 0))
-    })
+    });
+    const [streak, setStreak] = useState(defaultStreakValue.current);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
@@ -54,7 +55,7 @@ function Streak(props: StreakInput): React.JSX.Element {
             });
             setLoaded(true);
         }
-        getStreakFromStorage(streak, callback);
+        getStreakFromStorage(defaultStreakValue.current, callback);
     }, [])
 
     useEffect(() => {
