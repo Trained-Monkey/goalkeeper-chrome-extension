@@ -42,11 +42,12 @@ function storeStreakInStorage(state: any): void {
 }
 
 function Streak(props: StreakInput): React.JSX.Element {
-  const defaultStreakValue = useRef({
+  // Default streak value as useRef 
+  const defaultStreakValue = {
     counter: 0,
     lastCompleted: new Date(Date.UTC(0, 0, 0, 0, 0, 0))
-  });
-  const [streak, setStreak] = useState(defaultStreakValue.current);
+  };
+  const [streak, setStreak] = useState(defaultStreakValue);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -60,7 +61,7 @@ function Streak(props: StreakInput): React.JSX.Element {
       });
       setLoaded(true);
     }
-    getStreakFromStorage(defaultStreakValue.current, callback);
+    getStreakFromStorage(defaultStreakValue, callback);
   }, [])
 
   useEffect(() => {
@@ -102,10 +103,12 @@ function Streak(props: StreakInput): React.JSX.Element {
 
   return (<div className="streak-container manage-goal-item">
     <h1>{streak.counter === 0 ? null : streak.counter} </h1>
-    <img src={
-      streak.counter === 0 ? fireUnlitImg : fireLitImg
-    }
-      alt="Fire icon" width="50" height="50" />
+    <img 
+      src={streak.counter === 0 ? fireUnlitImg : fireLitImg}
+      alt="Streak icon" 
+      width="50" 
+      height="50"
+    />
   </div>);
 }
 

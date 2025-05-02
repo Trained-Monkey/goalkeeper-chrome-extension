@@ -1,14 +1,14 @@
 // Element containing the name of the goal, when it expires as well as its 
 // duration
 // - 
-
 import { screen, render } from "@testing-library/react";
+import React from "react";
 import userEvent from '@testing-library/user-event'
-
+// Components
 import Goal from "./Goal";
+// Interfaces
 import GoalInput from "../../../interface/GoalInput";
 import { TYPES } from "../../../constants/Goal";
-import React from "react";
 
 describe("Goal", () => {
   it("shows a name, expiry and duration", () => {

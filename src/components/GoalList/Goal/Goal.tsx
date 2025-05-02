@@ -17,18 +17,16 @@ function getDaysBetweenDate(start: Date, end: Date): number {
   return milliseconds / millisecondsPerDay;
 }
 
-function millisecondsToExpiryString(millisecondsTillExpiry: number): string {
+function getCountdownTimeString(countdown: number): string {
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
   const millisecondsPerHour = 60 * 60 * 1000;
   const monthThreshold = 27;
   const weekThreshold = 7;
   const dayThreshold = 1;
-  const daysTillExpiry = Math.floor(millisecondsTillExpiry
-    / millisecondsPerDay);
+  const daysTillExpiry = Math.floor(countdown / millisecondsPerDay);
 
-  millisecondsTillExpiry -= daysTillExpiry * millisecondsPerDay;
-  const hoursTillExpiry = Math.floor(millisecondsTillExpiry
-    / millisecondsPerHour);
+  countdown -= daysTillExpiry * millisecondsPerDay;
+  const hoursTillExpiry = Math.floor(countdown / millisecondsPerHour);
 
   let unitOfTime: string;
   let numUnits: number;
@@ -51,7 +49,7 @@ function millisecondsToExpiryString(millisecondsTillExpiry: number): string {
     unitOfTime += "s";
   }
 
-  return `Expires in ${numUnits.toString()} ${unitOfTime}`;
+  return `${numUnits.toString()} ${unitOfTime}`;
 }
 export function getDaysToIncrement(lastCompleted: Date, goalType: TYPES): number {
   let daysToIncrement;
@@ -83,17 +81,23 @@ function timeToExpiryString(lastCompleted: Date, goalType: TYPES): string {
   let daysToIncrement = getDaysToIncrement(lastCompleted, goalType);
 
   const currentDate = new Date();
-  const millisecondsRemaining =
-    daysToIncrement * millisecondsPerDay
-    - getDaysBetweenDate(lastCompleted, currentDate) * millisecondsPerDay;
+  const millisecondsRemaining = daysToIncrement
+    * millisecondsPerDay
+    - getDaysBetweenDate(lastCompleted, currentDate)
+    * millisecondsPerDay;
 
-  return millisecondsToExpiryString(millisecondsRemaining);
+  return getCountdownTimeString(millisecondsRemaining);
 }
 
 function Goal(prop: GoalInput): React.JSX.Element {
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
-  const { name, type, lastCompleted,
-    deletionCallback, finishedCallback } = prop;
+  const { 
+    name, 
+    type, 
+    lastCompleted,
+    deletionCallback, 
+    finishedCallback
+  } = prop;
   const expiry: string = timeToExpiryString(lastCompleted, type);
 
   function handleSubmitButtonClick() {
@@ -117,8 +121,10 @@ function Goal(prop: GoalInput): React.JSX.Element {
 
   return (
     <li className={
-      (taskCompleted ? "list-group-item  list-group-item-success"
-        : "list-group-item")
+      (taskCompleted
+        ? "list-group-item  list-group-item-success"
+        : "list-group-item"
+      )
       + " goal-container"
     }>
       <div className="goal-item-container text">
@@ -128,13 +134,22 @@ function Goal(prop: GoalInput): React.JSX.Element {
         <p className="goal-text"> {type} </p>
       </div>
       <div className="goal-item-container text">
-        <p className="goal-text"> {expiry} </p>
+        <p className="goal-text">
+          {taskCompleted
+            ? `Refreshes in ${expiry}`
+            : `Due in ${expiry}`
+          }
+        </p>
       </div>
       <div className="goal-item-container button">
-
         {taskCompleted ? null :
-          <button onClick={handleSubmitButtonClick} name="submit-button"
-            className="btn btn-primary"> Done </button>
+          <button
+            onClick={handleSubmitButtonClick}
+            name="submit-button"
+            className="btn btn-primary"
+          >
+            Done
+          </button>
         }
       </div>
 
@@ -142,9 +157,6 @@ function Goal(prop: GoalInput): React.JSX.Element {
         <button onClick={handleDeleteButtonClick} name="delete-button"
           className="btn btn-danger"> Delete </button>
       </div>
-
-
-
     </li >
   )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 // Components
 import GoalList from './components/GoalList/GoalList';
 import Streak from './components/Streak/Streak';
@@ -6,14 +6,41 @@ import AddGoal from './components/AddGoal/AddGoal';
 // Interfaces
 import GoalInput from './interface/GoalInput';
 import Goal from './interface/Goal';
+import { REDUCER_ACTION_TYPES, ReducerAttributes } from './constants/GoalList';
 // Misc
 import { getFromStoragePromise, storeInStorage } from './utils/ChromeStorage';
 import './App.css';
 
-function App() {
-  const emptyList: any[] = [];
-  const [storedGoals, setStoredGoals] = useState(emptyList);
+function goalsReducer(state: Goal[] | null, action: ReducerAttributes): Goal[] {
+  if (state == null){
+    state = []
+  }
 
+  // Letting typescript know some attributes wont be null despite being optional
+  // could refactor in future to ensure attributes must be present.
+  if (action.action === REDUCER_ACTION_TYPES.TOGGLE) {
+    return state.map((oldGoalInputState, index) => {
+      
+      if (index === action.index) {
+        return action.nextGoalState!;
+      }
+      return oldGoalInputState;
+    })
+  } else if (action.action === REDUCER_ACTION_TYPES.DELETE) {
+    return state.filter((_, index) => index !== action.index);
+  } else if (action.action === REDUCER_ACTION_TYPES.LOAD) {
+    return action.storedGoals!;
+  } else if (action.action === REDUCER_ACTION_TYPES.ADD) {
+    return [...state, {
+      ...action.newGoal!
+    }]
+  }
+  throw Error(`Unknown action ${action.action}.`);
+}
+
+function App() {
+  const emptyList: Goal[] = [];
+  const [storedGoals, storedGoalsDispatch] = useReducer(goalsReducer, emptyList);
   const [loaded, setLoaded] = useState(false);
 
   // Get our stored goals data from storage
@@ -24,10 +51,12 @@ function App() {
         result.lastCompleted = new Date(goal.lastCompleted.toString());
         return result;
       }))
-      setStoredGoals(goals);
+      storedGoalsDispatch({
+        action: REDUCER_ACTION_TYPES.LOAD,
+        storedGoals: goals
+      })
       setLoaded(true);
     })
-
   }, [])
 
   useEffect(() => {
@@ -39,7 +68,6 @@ function App() {
       })
       storeInStorage({ goals: formattedGoals });
     }
-
   }, [storedGoals, loaded])
 
   // Attaching our callbacks for marking and deleting goal
@@ -48,44 +76,30 @@ function App() {
       return {
         ...prev,
         deletionCallback: () => {
-          setStoredGoals(prevStoredGoals => {
-            return prevStoredGoals.filter((_, prevIndex) => {
-              return prevIndex !== index;
-            });
+          storedGoalsDispatch({
+            action: REDUCER_ACTION_TYPES.DELETE,
+            index: index
           })
         },
         finishedCallback: (nextGoalState: GoalInput) => {
-          setStoredGoals(prevStoredGoals => {
-            return prevStoredGoals.map((oldGoalState, prevIndex) => {
-              console.log(oldGoalState, nextGoalState);
-              if (prevIndex === index) {
-                return nextGoalState
-              }
-
-              return oldGoalState;
-            })
+          storedGoalsDispatch({
+            action: REDUCER_ACTION_TYPES.TOGGLE,
+            index: index,
+            nextGoalState: nextGoalState
           })
         }
       }
     })
 
-  console.log(goalsWithCallback);
-
   const addGoal = (newGoal: Goal) => {
-    setStoredGoals(prev => [...prev, {
-      ...newGoal,
-      // These two callbacks will be automatically attached once component is
-      // reloaded
-      finishedCallback: () => {
-        console.log("New callback not attached")
-      },
-      deletionCallback: () => { }
-    }])
+    storedGoalsDispatch({
+      action: REDUCER_ACTION_TYPES.ADD,
+      newGoal: newGoal
+    })
   }
 
   return (
     <div className="app">
-
       <GoalList goals={goalsWithCallback} />
       <div className="manage-goal-container">
         <Streak goals={storedGoals} />

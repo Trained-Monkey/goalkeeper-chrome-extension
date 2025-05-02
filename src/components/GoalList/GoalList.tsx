@@ -8,16 +8,18 @@ import GoalListInput from "../../interface/GoalListInput";
 import './GoalList.css';
 
 function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
+  const xAfterY = 1;
+  const xBeforeY = -1;
   const currentDate = new Date();
   const xCompleted = x.lastCompleted > currentDate;
   const yCompleted = y.lastCompleted > currentDate;
 
   if (xCompleted && !yCompleted) {
-    return 1
+    return xAfterY;
   }
 
   if (!xCompleted && yCompleted) {
-    return -1;
+    return xBeforeY;
   }
 
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
@@ -30,10 +32,10 @@ function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
     * millisecondsPerDay);
 
   if (xExpiry < yExpiry) {
-    return -1;
+    return xBeforeY;
   }
 
-  return 1;
+  return xAfterY;
 }
 
 function GoalList(prop: GoalListInput): React.JSX.Element {
