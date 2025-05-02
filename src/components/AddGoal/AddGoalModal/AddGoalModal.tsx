@@ -1,29 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createPortal } from "react-dom";
-
+// Components
+import DatePicker from "react-datepicker";
+// Interfaces
+import Goal from "../../../interface/Goal";
 import { TYPES } from "../../../constants/Goal";
 import AddGoalModalInput from "../../../interface/AddGoalModalInput";
-import DatePicker from "react-datepicker";
-
+// Misc
 import 'react-datepicker/dist/react-datepicker.css';
 import "./AddGoalModal.css";
-import Goal from "../../../interface/Goal";
-
 
 function AddGoalModal(props: AddGoalModalInput) {
   const { closeModal, closeModalOnClick, addGoalCallback } = props;
   const [startDate, setStartDate] = useState(new Date());
 
-
   function submitForm(formData: any) {
-    console.log("Submitting form");
-    
-    if (formData.get(["goalName"]) == ""){
+    if (formData.get(["goalName"]) === "") {
       alert("Goal name can't be empty");
       return;
     }
 
-    console.log(formData.get(["goalStartDate"]));
     const [day, month, year] = formData.get(["goalStartDate"]).split("/");
 
     const newGoal: Goal = {
@@ -32,14 +28,16 @@ function AddGoalModal(props: AddGoalModalInput) {
       lastCompleted: new Date(year, parseInt(month) - 1, parseInt(day))
     }
 
-    console.log(newGoal.lastCompleted);
-
     addGoalCallback(newGoal);
     closeModal();
-    // closeModal
   }
   return (
-    <div onClick={closeModalOnClick} className="modal fade show bd-example-modal-lg" tabIndex={-1} role="dialog">
+    <div
+      onClick={closeModalOnClick}
+      className="modal fade show bd-example-modal-lg"
+      tabIndex={-1}
+      role="dialog"
+    >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -54,12 +52,19 @@ function AddGoalModal(props: AddGoalModalInput) {
 
               <div className="form-group">
                 <label htmlFor="goalName">Goal name</label>
-                <input type="text" name="goalName" className="form-control" id="goalName" aria-describedby="emailHelp" placeholder="Enter name" />
+                <input type="text"
+                  name="goalName"
+                  className="form-control"
+                  id="goalName"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter name" />
               </div>
               <div className="form-group">
                 <label htmlFor="goalType">Goal to be completed</label>
                 <select className="form-control" name="goalType" id="goalType">
-                  {Object.values(TYPES).map((type: string) => <option key={type}>{type}</option>)}
+                  {Object.values(TYPES).map((type: string) =>
+                    <option key={type}>{type}</option>)
+                  }
                 </select>
               </div>
               <div className="form-group">
@@ -68,26 +73,34 @@ function AddGoalModal(props: AddGoalModalInput) {
                   className="form-control"
                   id="formDate"
                   selected={startDate}
-                  onChange={(date: Date | null) => date ? setStartDate(date) : null}
+                  onChange={(date: Date | null) =>
+                    date ? setStartDate(date) : null
+                  }
                   dateFormat="dd/MM/YYYY"
                   name="goalStartDate"
                 />
               </div>
-
-
-
-
             </div>
             <div className="modal-footer">
-              <button type="submit" className="btn btn-primary">Add goal</button>
-              <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+              >
+                Add goal</button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={closeModal}
+              >
+                Close
+              </button>
             </div>
           </form>
         </div>
-
-
       </div>
-      {createPortal(<div onClick={closeModal} className="modal-backdrop show"></div>, document.body)}
+      {createPortal(<div onClick={closeModal}
+        className="modal-backdrop show"
+      ></div>, document.body)}
     </div >)
 }
 

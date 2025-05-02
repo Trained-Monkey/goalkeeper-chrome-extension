@@ -2,7 +2,7 @@
 // duration
 // - 
 
-import {screen, render} from "@testing-library/react";
+import { screen, render } from "@testing-library/react";
 import userEvent from '@testing-library/user-event'
 
 import Goal from "./Goal";
@@ -11,140 +11,140 @@ import { TYPES } from "../../../constants/Goal";
 import React from "react";
 
 describe("Goal", () => {
-    it("shows a name, expiry and duration", () => {
-        const currentDate = new Date();
-        const testData: GoalInput = {
-            name: "Drink water",
-            lastCompleted: currentDate,
-            type: TYPES.DAILY,
-            deletionCallback: () => {},
-            finishedCallback: () => {}
-        }
+  it("shows a name, expiry and duration", () => {
+    const currentDate = new Date();
+    const testData: GoalInput = {
+      name: "Drink water",
+      lastCompleted: currentDate,
+      type: TYPES.DAILY,
+      deletionCallback: () => { },
+      finishedCallback: () => { }
+    }
 
-        render(<Goal {...testData} />);
+    render(<Goal {...testData} />);
 
-        expect(screen.getByText("Drink water")).toBeInTheDocument();
-        expect(screen.getByText("Daily")).toBeInTheDocument();
-        expect(screen.getByText(/in 23 hours/)).toBeInTheDocument();
-    })
+    expect(screen.getByText(/Drink water/)).toBeInTheDocument();
+    expect(screen.getByText(/Daily/)).toBeInTheDocument();
+    expect(screen.getByText(/in 23 hours/)).toBeInTheDocument();
+  })
 
-    it("can show hourly expiry", () => {
-        const twentyHoursAgo = new Date(Date.now() - (20 * 60 * 60 * 1000));
-        const testData: GoalInput = {
-            name: "Drink water",
-            lastCompleted: twentyHoursAgo,
-            type: TYPES.DAILY,
-            deletionCallback: () => {},
-            finishedCallback: () => {}
-        }
+  it("can show hourly expiry", () => {
+    const twentyHoursAgo = new Date(Date.now() - (20 * 60 * 60 * 1000));
+    const testData: GoalInput = {
+      name: "Drink water",
+      lastCompleted: twentyHoursAgo,
+      type: TYPES.DAILY,
+      deletionCallback: () => { },
+      finishedCallback: () => { }
+    }
 
-        render(<Goal {...testData} />);
+    render(<Goal {...testData} />);
 
-        expect(screen.getByText("Drink water")).toBeInTheDocument();
-        expect(screen.getByText("Daily")).toBeInTheDocument();
-        expect(screen.getByText(/in 3 hours/)).toBeInTheDocument();
-    })
+    expect(screen.getByText("Drink water")).toBeInTheDocument();
+    expect(screen.getByText("Daily")).toBeInTheDocument();
+    expect(screen.getByText(/in 3 hours/)).toBeInTheDocument();
+  })
 
-    it("can show weekly expiry", () =>{
-        const currentDate = new Date();
-        const testData: GoalInput = {
-            name: "Drink water",
-            lastCompleted: currentDate,
-            type: TYPES.WEEKLY,
-            deletionCallback: () => {},
-            finishedCallback: () => {}
-        }
+  it("can show weekly expiry", () => {
+    const currentDate = new Date();
+    const testData: GoalInput = {
+      name: "Drink water",
+      lastCompleted: currentDate,
+      type: TYPES.WEEKLY,
+      deletionCallback: () => { },
+      finishedCallback: () => { }
+    }
 
-        render(<Goal {...testData} />);
+    render(<Goal {...testData} />);
 
-        expect(screen.getByText("Drink water")).toBeInTheDocument();
-        expect(screen.getByText("Weekly")).toBeInTheDocument();
-        expect(screen.getByText(/in 6 days/)).toBeInTheDocument();
-    })
+    expect(screen.getByText("Drink water")).toBeInTheDocument();
+    expect(screen.getByText("Weekly")).toBeInTheDocument();
+    expect(screen.getByText(/in 6 days/)).toBeInTheDocument();
+  })
 
-    it("can show forntnightly expiry", () =>{
-        const currentDate = new Date();
-        const testData: GoalInput = {
-            name: "Drink water",
-            lastCompleted: currentDate,
-            type: TYPES.FORTNIGHTLY,
-            deletionCallback: () => {},
-            finishedCallback: () => {}
-        }
+  it("can show forntnightly expiry", () => {
+    const currentDate = new Date();
+    const testData: GoalInput = {
+      name: "Drink water",
+      lastCompleted: currentDate,
+      type: TYPES.FORTNIGHTLY,
+      deletionCallback: () => { },
+      finishedCallback: () => { }
+    }
 
-        render(<Goal {...testData} />);
+    render(<Goal {...testData} />);
 
-        expect(screen.getByText("Drink water")).toBeInTheDocument();
-        expect(screen.getByText("Fortnightly")).toBeInTheDocument();
-        expect(screen.getByText(/in 1 week/)).toBeInTheDocument();
-    })
+    expect(screen.getByText("Drink water")).toBeInTheDocument();
+    expect(screen.getByText("Fortnightly")).toBeInTheDocument();
+    expect(screen.getByText(/in 1 week/)).toBeInTheDocument();
+  })
 
-    it("can show monthly expiry", () =>{
-        const currentDate = new Date();
-        const testData: GoalInput = {
-            name: "Drink water",
-            lastCompleted: currentDate,
-            type: TYPES.MONTHLY,
-            deletionCallback: () => {},
-            finishedCallback: () => {}
-        }
+  it("can show monthly expiry", () => {
+    const currentDate = new Date();
+    const testData: GoalInput = {
+      name: "Drink water",
+      lastCompleted: currentDate,
+      type: TYPES.MONTHLY,
+      deletionCallback: () => { },
+      finishedCallback: () => { }
+    }
 
-        render(<Goal {...testData} />);
+    render(<Goal {...testData} />);
 
-        expect(screen.getByText("Drink water")).toBeInTheDocument();
-        expect(screen.getByText("Monthly")).toBeInTheDocument();
-        expect(screen.getByText(/in 1 month/)).toBeInTheDocument();
-    })
+    expect(screen.getByText("Drink water")).toBeInTheDocument();
+    expect(screen.getByText("Monthly")).toBeInTheDocument();
+    expect(screen.getByText(/in 1 month/)).toBeInTheDocument();
+  })
 
-    it("has a delete button", () => {
-        const currentDate = new Date();
-        const testData: GoalInput = {
-            name: "Drink water",
-            lastCompleted: currentDate,
-            type: TYPES.DAILY,
-            deletionCallback: jest.fn(() => {}),
-            finishedCallback: () => {}
-        }
-        
-        render(<Goal {...testData}/>);
-        const button = screen.getByRole('button', {name: /Delete/, hidden: true});
+  it("has a delete button", () => {
+    const currentDate = new Date();
+    const testData: GoalInput = {
+      name: "Drink water",
+      lastCompleted: currentDate,
+      type: TYPES.DAILY,
+      deletionCallback: jest.fn(() => { }),
+      finishedCallback: () => { }
+    }
 
-        userEvent.click(button);
+    render(<Goal {...testData} />);
+    const button = screen.getByRole('button', { name: /Delete/, hidden: true });
 
-        expect(testData.deletionCallback.mock.calls).toHaveLength(1);
-    })
+    userEvent.click(button);
 
-    it("has a finished button", () => {
-        const currentDate = new Date();
-        const testData: GoalInput = {
-            name: "Drink water",
-            lastCompleted: currentDate,
-            type: TYPES.DAILY,
-            deletionCallback: () => {},
-            finishedCallback: jest.fn(() => {})
-        }
-        
-        render(<Goal {...testData}/>);
-        const button = screen.getByRole('button', {name: /Done/});
+    expect(testData.deletionCallback.mock.calls).toHaveLength(1);
+  })
 
-        userEvent.click(button);
+  it("has a finished button", () => {
+    const currentDate = new Date();
+    const testData: GoalInput = {
+      name: "Drink water",
+      lastCompleted: currentDate,
+      type: TYPES.DAILY,
+      deletionCallback: () => { },
+      finishedCallback: jest.fn(() => { })
+    }
 
-        expect(testData.finishedCallback.mock.calls).toHaveLength(1);
-    })
+    render(<Goal {...testData} />);
+    const button = screen.getByRole('button', { name: /Done/ });
 
-    test('finished goals should not have a submit button', () => {
-        const nextExpiry = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-        const testData: GoalInput = {
-            name: "Drink water",
-            lastCompleted: nextExpiry,
-            type: TYPES.DAILY,
-            deletionCallback: () => {},
-            finishedCallback: jest.fn(() => {})
-        }
+    userEvent.click(button);
 
-        render(<Goal {...testData}/>);
+    expect(testData.finishedCallback.mock.calls).toHaveLength(1);
+  })
 
-        expect(screen.queryByRole('button', {name: /Done/}))
-            .not.toBeInTheDocument();
-    })
+  test('finished goals should not have a submit button', () => {
+    const nextExpiry = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+    const testData: GoalInput = {
+      name: "Drink water",
+      lastCompleted: nextExpiry,
+      type: TYPES.DAILY,
+      deletionCallback: () => { },
+      finishedCallback: jest.fn(() => { })
+    }
+
+    render(<Goal {...testData} />);
+
+    expect(screen.queryByRole('button', { name: /Done/ }))
+      .not.toBeInTheDocument();
+  })
 })

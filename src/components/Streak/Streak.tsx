@@ -1,107 +1,112 @@
 import React, { useState, useEffect, useRef } from "react";
+// Interfaces
 import StreakInput from "../../interface/StreakInput";
+import StreakStoredData from "../../interface/StreakStoredData";
+import Goal from "../../interface/Goal";
+// Misc
 import "./Streak.css";
 import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
 import fireLitImg from "../../assets/Streak/fire-lit.svg";
-import { getFromStoragePromise, storeInStorage } from "../../utils/ChromeStorage";
-import Goal from "../../interface/Goal";
-import StreakStoredData from "../../interface/StreakStoredData";
+import {
+  getFromStoragePromise,
+  storeInStorage
+} from "../../utils/ChromeStorage";
 
 function getMidnight(date: Date): Date {
-    const result = new Date(date);
-    result.setHours(0, 0, 0, 0);
-    return result;
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
+  return result;
 }
 
 function getStreakFromStorage(initialState: any, callback: any): void {
-    const storageQuery: StreakStoredData = {
-        counter: initialState.counter,
-        lastCompleted: initialState.lastCompleted.toString()
-    };
+  const storageQuery: StreakStoredData = {
+    counter: initialState.counter,
+    lastCompleted: initialState.lastCompleted.toString()
+  };
 
-    getFromStoragePromise(storageQuery)?.then((result) => {
-        if (result["counter"] == null) {
-            return;
-        }
-        callback(result);
-    })
-    return;
+  getFromStoragePromise(storageQuery)?.then((result) => {
+    if (result["counter"] == null) {
+      return;
+    }
+    callback(result);
+  })
+  return;
 }
 
 function storeStreakInStorage(state: any): void {
-    const storageQuery: StreakStoredData = {
-        counter: state.counter,
-        lastCompleted: state.lastCompleted.toString()
-    }
-    storeInStorage(storageQuery);
+  const storageQuery: StreakStoredData = {
+    counter: state.counter,
+    lastCompleted: state.lastCompleted.toString()
+  }
+  storeInStorage(storageQuery);
 }
 
 function Streak(props: StreakInput): React.JSX.Element {
-    const defaultStreakValue = useRef({
-        counter: 0,
-        lastCompleted: new Date(Date.UTC(0, 0, 0, 0, 0, 0))
-    });
-    const [streak, setStreak] = useState(defaultStreakValue.current);
-    const [loaded, setLoaded] = useState(false);
+  const defaultStreakValue = useRef({
+    counter: 0,
+    lastCompleted: new Date(Date.UTC(0, 0, 0, 0, 0, 0))
+  });
+  const [streak, setStreak] = useState(defaultStreakValue.current);
+  const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
-        const callback = (value: StreakStoredData) => {
-            setStreak(prev => {
-                return {
-                    ...prev,
-                    counter: value.counter,
-                    lastCompleted: new Date(value.lastCompleted)
-                }
-            });
-            setLoaded(true);
+  useEffect(() => {
+    const callback = (value: StreakStoredData) => {
+      setStreak(prev => {
+        return {
+          ...prev,
+          counter: value.counter,
+          lastCompleted: new Date(value.lastCompleted)
         }
-        getStreakFromStorage(defaultStreakValue.current, callback);
-    }, [])
-
-    useEffect(() => {
-        if (loaded) {
-            storeStreakInStorage(streak);
-        }
-    }, [loaded, streak])
-
-    // Get goals from props and determine if we are meant to increment streak
-    // counter
-    const { goals } = props;
-    const currentDate = new Date();
-    const numUnfinishedGoals = goals.reduce((curr: number, acc: Goal) => {
-        if (acc.lastCompleted < currentDate) {
-            return curr + 1;
-        }
-        return curr;
-    }, 0)
-
-    // Need to ensure we are only incrementing streak counter if data has been
-    // loaded
-    if (loaded) {
-        if (numUnfinishedGoals === 0 && streak.lastCompleted < currentDate) {
-            setStreak(prev => {
-                return {
-                    counter: prev.counter + 1,
-                    lastCompleted: getMidnight(new Date(currentDate.getTime() + 24 * 60 * 60 * 1000))
-                }
-            })
-        } else if (numUnfinishedGoals > 0 && streak.lastCompleted > currentDate) {
-            setStreak(prev => {
-                return {
-                    counter: prev.counter - 1,
-                    lastCompleted: getMidnight(currentDate)
-                }
-            })
-        }
+      });
+      setLoaded(true);
     }
+    getStreakFromStorage(defaultStreakValue.current, callback);
+  }, [])
 
-    return (<div className="streak-container manage-goal-item">
-        <h1>{streak.counter === 0 ? null : streak.counter} </h1>
-        <img src={
-            streak.counter === 0 ? fireUnlitImg : fireLitImg
+  useEffect(() => {
+    if (loaded) {
+      storeStreakInStorage(streak);
+    }
+  }, [loaded, streak])
+
+  // Get goals from props and determine if we are meant to increment streak
+  // counter
+  const { goals } = props;
+  const currentDate = new Date();
+  const numUnfinishedGoals = goals.reduce((curr: number, acc: Goal) => {
+    if (acc.lastCompleted < currentDate) {
+      return curr + 1;
+    }
+    return curr;
+  }, 0)
+
+  // Need to ensure we are only incrementing streak counter if data has been
+  // loaded
+  if (loaded) {
+    if (numUnfinishedGoals === 0 && streak.lastCompleted < currentDate) {
+      setStreak(prev => {
+        return {
+          counter: prev.counter + 1,
+          lastCompleted: getMidnight(new Date(currentDate.getTime() + 24 * 60 * 60 * 1000))
         }
-            alt="Fire icon" width="50" height="50" />
-    </div>);
+      })
+    } else if (numUnfinishedGoals > 0 && streak.lastCompleted > currentDate) {
+      setStreak(prev => {
+        return {
+          counter: prev.counter - 1,
+          lastCompleted: getMidnight(currentDate)
+        }
+      })
+    }
+  }
+
+  return (<div className="streak-container manage-goal-item">
+    <h1>{streak.counter === 0 ? null : streak.counter} </h1>
+    <img src={
+      streak.counter === 0 ? fireUnlitImg : fireLitImg
+    }
+      alt="Fire icon" width="50" height="50" />
+  </div>);
 }
 
 export default Streak;
