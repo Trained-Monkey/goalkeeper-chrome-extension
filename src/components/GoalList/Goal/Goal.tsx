@@ -1,9 +1,21 @@
 import React from "react";
 // Interfaces
-import GoalInput from "../../../interface/GoalInput";
 import { TYPES } from "../../../constants/Goal";
 // Misc
 import './Goal.css';
+
+export interface GoalInput {
+  // Name of the goal
+  name: string,
+  // Type indicating how often the goal needs to be done
+  type: TYPES,
+  // Midnight of when the last goal was completed
+  lastCompleted: Date,
+  // Callback to delete goal
+  deletionCallback: any
+  // Callback to mark goal as finished
+  finishedCallback: any
+}
 
 function treatAsUTC(date: Date): Date {
   var result = new Date(date);

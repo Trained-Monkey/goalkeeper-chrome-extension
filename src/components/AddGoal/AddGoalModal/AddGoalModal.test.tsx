@@ -35,17 +35,20 @@ describe("AddGoalModal", () => {
     const textbox: HTMLElement = screen.getByRole('textbox', { name: /Goal name/ });
     const dropdown: HTMLElement = screen.getByRole('combobox', { name: /Goal to be completed/ });
     const date: HTMLElement = screen.getByRole('textbox', { name: /Start on/ });
+    const year = 2024;
+    const month = 11
+    const day = 21
 
     fireEvent.change(textbox, { target: { value: 'Test goal' } });
     fireEvent.change(dropdown, { target: { value: TYPES.DAILY } });
-    fireEvent.change(date, { target: { value: "02/05/2025" } })
+    fireEvent.change(date, { target: { value: `${day}/${month}/${year}` } })
     const button: HTMLElement = screen.getByRole('button', { name: /Add goal/ });
     fireEvent.click(button);
 
     const expectedGoal: Goal = {
       name: "Test goal",
       type: TYPES.DAILY,
-      lastCompleted: new Date(new Date().setHours(0, 0, 0, 0))
+      lastCompleted: new Date(new Date(year, month - 1, day).setHours(0, 0, 0, 0))
     }
 
     expect(addGoalCallback).toHaveBeenCalledWith(expectedGoal);

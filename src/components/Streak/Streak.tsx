@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 // Interfaces
-import StreakInput from "../../interface/StreakInput";
 import StreakStoredData from "../../interface/StreakStoredData";
 import Goal from "../../interface/Goal";
+import { STREAK_REDUCER_ACTIONS, ReducerAttributes } from "../../constants/Streak";
 // Misc
 import "./Streak.css";
 import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
@@ -12,10 +12,48 @@ import {
   storeInStorage
 } from "../../utils/ChromeStorage";
 
+export interface StreakInput {
+  // List of goals, used to calculate whether we need to increment todays 
+  // streak or not
+  goals: Goal[],
+}
+
 function getMidnight(date: Date): Date {
   const result = new Date(date);
   result.setHours(0, 0, 0, 0);
   return result;
+}
+
+function streakReducer(state: any, action: ReducerAttributes) {
+  if (action.action === STREAK_REDUCER_ACTIONS.LOAD) {
+    return {
+      counter: action.counter,
+      lastCompleted: action.lastCompleted
+    }
+  } else if (action.action === STREAK_REDUCER_ACTIONS.RESET) {
+    return {
+      counter: 0,
+      lastCompleted: getMidnight(new Date())
+    }
+  } else if (action.action === STREAK_REDUCER_ACTIONS.CEIL) {
+    if (state.lastCompleted < new Date()) {
+      return {
+        counter: state.counter + 1,
+        lastCompleted: getMidnight(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+      }
+    }
+    return state;
+  } else if (action.action === STREAK_REDUCER_ACTIONS.FLOOR) {
+    if (state.lastCompleted > new Date()) {
+      return {
+        counter: state.counter - 1,
+        lastCompleted: getMidnight(new Date())
+      }
+    }
+    return state
+  }
+
+  throw new Error(`Unknown action ${action.action}.`)
 }
 
 function getStreakFromStorage(initialState: any, callback: any): void {
@@ -42,23 +80,20 @@ function storeStreakInStorage(state: any): void {
 }
 
 function Streak(props: StreakInput): React.JSX.Element {
-  // Default streak value as useRef 
   const defaultStreakValue = {
     counter: 0,
     lastCompleted: new Date(Date.UTC(0, 0, 0, 0, 0, 0))
   };
-  const [streak, setStreak] = useState(defaultStreakValue);
+  const [streak, streakDispatch] = useReducer(streakReducer, defaultStreakValue);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const callback = (value: StreakStoredData) => {
-      setStreak(prev => {
-        return {
-          ...prev,
-          counter: value.counter,
-          lastCompleted: new Date(value.lastCompleted)
-        }
-      });
+      streakDispatch({
+        action: STREAK_REDUCER_ACTIONS.LOAD,
+        counter: value.counter,
+        lastCompleted: new Date(value.lastCompleted)
+      })
       setLoaded(true);
     }
     getStreakFromStorage(defaultStreakValue, callback);
@@ -84,29 +119,29 @@ function Streak(props: StreakInput): React.JSX.Element {
   // Need to ensure we are only incrementing streak counter if data has been
   // loaded
   if (loaded) {
+    if (streak.lastCompleted < getMidnight(new Date(currentDate.getTime() - 24 * 60 * 60 * 1000))) {
+      streakDispatch({
+        action: STREAK_REDUCER_ACTIONS.RESET,
+      })
+    }
+
     if (numUnfinishedGoals === 0 && streak.lastCompleted < currentDate) {
-      setStreak(prev => {
-        return {
-          counter: prev.counter + 1,
-          lastCompleted: getMidnight(new Date(currentDate.getTime() + 24 * 60 * 60 * 1000))
-        }
+      streakDispatch({
+        action: STREAK_REDUCER_ACTIONS.CEIL,
       })
     } else if (numUnfinishedGoals > 0 && streak.lastCompleted > currentDate) {
-      setStreak(prev => {
-        return {
-          counter: prev.counter - 1,
-          lastCompleted: getMidnight(currentDate)
-        }
+      streakDispatch({
+        action: STREAK_REDUCER_ACTIONS.FLOOR,
       })
     }
   }
 
   return (<div className="streak-container manage-goal-item">
     <h1>{streak.counter === 0 ? null : streak.counter} </h1>
-    <img 
+    <img
       src={streak.counter === 0 ? fireUnlitImg : fireLitImg}
-      alt="Streak icon" 
-      width="50" 
+      alt="Streak icon"
+      width="50"
       height="50"
     />
   </div>);

@@ -111,4 +111,28 @@ describe('Streak', () => {
       expect(element).toBeInTheDocument();
     }, { timeout: 5000 })
   })
+
+  it ("resets streak after missing one day", async () => {
+    const exampleStreak: number = 20;
+    const mockGetter = jest.spyOn(chrome.storage.local, "get");
+    const mockSetter = jest.spyOn(chrome.storage.local, "set");
+    const mockGetterReturn: StreakStoredData = {
+      counter: exampleStreak,
+      lastCompleted: new Date(new Date().getTime() - 48 * 60 * 60 * 1000).toString()
+    }
+
+    mockSetter.mockImplementation(() => Promise.resolve({}));
+    mockGetter.mockImplementation(() => Promise.resolve(mockGetterReturn));
+
+    const contextValue: StreakInput = {
+      goals: dummyUnfinishedGoalsData,
+    }
+
+    render(<Streak {...contextValue} />);
+
+    await waitFor(() => {
+      expect(mockGetter).toHaveBeenCalledTimes(1);
+      expect(screen.queryByText(/[0-9]+/)).not.toBeInTheDocument();
+    })
+  })
 })

@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-// Components
+// Components & Interfaces
 import AddGoalModal from "./AddGoalModal/AddGoalModal";
-// Interfaces
-import AddGoalInput from "../../interface/AddGoalInput";
+import Goal from "../../interface/Goal";
 // Misc
 import "./AddGoal.css";
+
+export interface AddGoalInput {
+  // Function to call to add goal obtained from form.
+  addGoalCallback: (newGoal: Goal) => void
+}
 
 function AddGoal(prop: AddGoalInput): React.JSX.Element {
   const [modalState, setModalState] = useState(false);

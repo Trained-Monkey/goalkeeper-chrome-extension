@@ -1,10 +1,9 @@
 import React, { useEffect, useReducer, useState } from 'react';
-// Components
+// Components & Interfaces
 import GoalList from './components/GoalList/GoalList';
 import Streak from './components/Streak/Streak';
 import AddGoal from './components/AddGoal/AddGoal';
-// Interfaces
-import GoalInput from './interface/GoalInput';
+import {GoalInput} from './components/GoalList/Goal/Goal';
 import Goal from './interface/Goal';
 import { REDUCER_ACTION_TYPES, ReducerAttributes } from './constants/GoalList';
 // Misc

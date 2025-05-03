@@ -9,7 +9,8 @@ class testStorage {
 
   constructor() {
     this.storage = {
-      "streakCounter": 0,
+      "counter": 20,
+      "lastCompleted": new Date(new Date().getTime() - 24 * 60 * 60 * 1001),
       "goals": [
         {
           name: "Drink water",

@@ -1,11 +1,13 @@
 import React from "react";
-// Component
-import Goal, { getDaysToIncrement } from "./Goal/Goal";
-// Interfaces
-import GoalInput from "../../interface/GoalInput";
-import GoalListInput from "../../interface/GoalListInput";
+// Component, Functions and Interfaces
+import Goal, { GoalInput, getDaysToIncrement } from "./Goal/Goal";
 // Misc
 import './GoalList.css';
+
+export interface GoalListInput {
+  // List of goals to display
+  goals: GoalInput[]
+}
 
 function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
   const xAfterY = 1;
@@ -41,7 +43,7 @@ function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
 function GoalList(prop: GoalListInput): React.JSX.Element {
   const { goals } = prop;
 
-  goals.sort((a, b) => goalExpiresBeforeGoal(a, b));
+  goals.sort((a: GoalInput, b: GoalInput) => goalExpiresBeforeGoal(a, b));
 
   return (
     <div className="goal-list-container">

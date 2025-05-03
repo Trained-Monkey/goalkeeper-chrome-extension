@@ -5,10 +5,18 @@ import DatePicker from "react-datepicker";
 // Interfaces
 import Goal from "../../../interface/Goal";
 import { TYPES } from "../../../constants/Goal";
-import AddGoalModalInput from "../../../interface/AddGoalModalInput";
 // Misc
 import 'react-datepicker/dist/react-datepicker.css';
 import "./AddGoalModal.css";
+
+export interface AddGoalModalInput {
+  // Function to call to add goal obtained from form
+  addGoalCallback: (goal: Goal) => void
+  // Forcefully closes the modal
+  closeModal: () => void
+  // Closes the modal but only if the space outside the modal is clicked
+  closeModalOnClick: (event: any) => void
+}
 
 function AddGoalModal(props: AddGoalModalInput) {
   const { closeModal, closeModalOnClick, addGoalCallback } = props;
