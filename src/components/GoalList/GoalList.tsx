@@ -1,43 +1,13 @@
 import React from "react";
 // Component, Functions and Interfaces
-import Goal, { GoalInput, getDaysToIncrement } from "./Goal/Goal";
+import Goal, { GoalInput } from "./Goal/Goal";
 // Misc
 import './GoalList.css';
+import { goalExpiresBeforeGoal } from "../../utils/Goal";
 
 export interface GoalListInput {
   // List of goals to display
   goals: GoalInput[]
-}
-
-function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
-  const xAfterY = 1;
-  const xBeforeY = -1;
-  const currentDate = new Date();
-  const xCompleted = x.lastCompleted > currentDate;
-  const yCompleted = y.lastCompleted > currentDate;
-
-  if (xCompleted && !yCompleted) {
-    return xAfterY;
-  }
-
-  if (!xCompleted && yCompleted) {
-    return xBeforeY;
-  }
-
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
-  const xExpiry = new Date(x.lastCompleted.getTime()
-    + getDaysToIncrement(x.lastCompleted, x.type)
-    * millisecondsPerDay);
-
-  const yExpiry = new Date(y.lastCompleted.getTime()
-    + getDaysToIncrement(y.lastCompleted, y.type)
-    * millisecondsPerDay);
-
-  if (xExpiry < yExpiry) {
-    return xBeforeY;
-  }
-
-  return xAfterY;
 }
 
 function GoalList(prop: GoalListInput): React.JSX.Element {
