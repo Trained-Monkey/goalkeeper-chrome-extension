@@ -14,7 +14,7 @@ describe("AddGoalModal", () => {
 
     render(<AddGoalModal
       closeModal={closeModal}
-      closeModalOnClick={closeModalOnClick}
+      closeModalIfClicked={closeModalOnClick}
       addGoalCallback={addGoalCallback}
     />);
 
@@ -28,7 +28,7 @@ describe("AddGoalModal", () => {
 
     render(<AddGoalModal
       closeModal={closeModal}
-      closeModalOnClick={closeModalOnClick}
+      closeModalIfClicked={closeModalOnClick}
       addGoalCallback={addGoalCallback}
     />);
 
@@ -60,10 +60,9 @@ describe("AddGoalModal", () => {
     const addGoalCallback = jest.fn(() => { });
     const closeModalOnClick = jest.fn(() => { });
 
-
     render(<AddGoalModal
       closeModal={closeModal}
-      closeModalOnClick={closeModalOnClick}
+      closeModalIfClicked={closeModalOnClick}
       addGoalCallback={addGoalCallback}
     />);
     expect(closeModal).toHaveBeenCalledTimes(0);
@@ -80,7 +79,7 @@ describe("AddGoalModal", () => {
 
     render(<AddGoalModal
       closeModal={closeModal}
-      closeModalOnClick={closeModalOnClick}
+      closeModalIfClicked={closeModalOnClick}
       addGoalCallback={addGoalCallback}
     />);
 

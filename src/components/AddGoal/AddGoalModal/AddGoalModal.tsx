@@ -84,7 +84,7 @@ function AddGoalModal(props: AddGoalModalInput) {
                   onChange={(date: Date | null) =>
                     date ? setStartDate(date) : null
                   }
-                  dateFormat="dd/MM/YYYY"
+                  dateFormat="dd/MM/yyyy"
                   name="goalStartDate"
                 />
               </div>
