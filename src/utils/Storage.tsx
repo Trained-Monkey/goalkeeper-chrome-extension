@@ -1,3 +1,5 @@
+// Access to the chrome extension storage API, uses custom storage object for
+// the purposes of development.
 import { TYPES } from "../constants/Goal";
 
 let storage: chrome.storage.LocalStorageArea | testStorage;
@@ -27,12 +29,11 @@ class testStorage {
           type: TYPES.WEEKLY,
           lastCompleted: new Date(),
         }
-
       ]
-
     };
   }
 
+  // Retreive values from storage
   get(keyDict: { [s: string]: string; }): Promise<object> {
     return new Promise((resolve, reject) => {
       let result: { [s: string]: string; } = {};
@@ -47,6 +48,7 @@ class testStorage {
     });
   }
 
+  // Stores value in storage
   set(keyValue: { [s: string]: string; }): Promise<object> {
     return new Promise((resolve, reject) => {
       for (const [key, value] of Object.entries(keyValue)) {
@@ -57,13 +59,14 @@ class testStorage {
 }
 
 if (process.env.NODE_ENV === 'development') {
-  console.log('Dev mode detected, running testStorage instead of accessing chrome api');
+  console.log('Development mode detected,'
+  + ' running testStorage instead of accessing chrome api');
   storage = new testStorage();
 } else {
   storage = chrome?.storage?.local;
 }
 
-export function getFromStoragePromise(key: { [s: string]: any; }): Promise<{ [key: string]: any }> | null {
+export function getFromStorage(key: { [s: string]: any; }): Promise<{ [key: string]: any }> | null {
   if (storage == null) {
     console.error("Chrome extension not accessible,"
       + " ensure webpage is being ran as an extension.");

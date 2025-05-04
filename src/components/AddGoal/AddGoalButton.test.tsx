@@ -2,12 +2,12 @@ import { screen, render, waitFor } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
 // Components
-import AddGoal from "./AddGoal";
+import AddGoalButton from "./AddGoalButton";
 
 describe("AddGoal", () => {
   it("exists as a clickable button", () => {
     const callback = jest.fn(() => { });
-    render(<AddGoal addGoalCallback={callback} />);
+    render(<AddGoalButton addGoalCallback={callback} />);
 
     const button: HTMLElement = screen.getByRole('button', {
       name: /Add Goal/
@@ -18,7 +18,7 @@ describe("AddGoal", () => {
   })
   it("creates a modal", async () => {
     const callback = jest.fn(() => { });
-    render(<AddGoal addGoalCallback={callback} />);
+    render(<AddGoalButton addGoalCallback={callback} />);
 
     const button: HTMLElement = screen.getByRole('button', {
       name: /Add Goal/
@@ -35,7 +35,7 @@ describe("AddGoal", () => {
   })
   it("can close the modal by clicking the close button", async () => {
     const callback = jest.fn(() => { });
-    render(<AddGoal addGoalCallback={callback} />);
+    render(<AddGoalButton addGoalCallback={callback} />);
 
     const addGoalButton: HTMLElement = screen.getByRole('button', {
       name: /Add Goal/
@@ -60,7 +60,7 @@ describe("AddGoal", () => {
   })
   it("can close the modal clicking off the modal", async () => {
     const callback = jest.fn(() => { });
-    render(<AddGoal addGoalCallback={callback} />);
+    render(<AddGoalButton addGoalCallback={callback} />);
 
     const button: HTMLElement = screen.getByRole('button', {
       name: /Add Goal/

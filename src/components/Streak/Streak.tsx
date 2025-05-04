@@ -8,9 +8,9 @@ import "./Streak.css";
 import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
 import fireLitImg from "../../assets/Streak/fire-lit.svg";
 import {
-  getFromStoragePromise,
+  getFromStorage,
   storeInStorage
-} from "../../utils/ChromeStorage";
+} from "../../utils/Storage";
 import { getMidnight } from "../../utils/Date";
 
 export interface StreakInput {
@@ -57,7 +57,7 @@ function getStreakFromStorage(initialState: any, callback: any): void {
     lastCompleted: initialState.lastCompleted.toString()
   };
 
-  getFromStoragePromise(storageQuery)?.then((result) => {
+  getFromStorage(storageQuery)?.then((result) => {
     if (result["counter"] == null) {
       return;
     }
@@ -80,7 +80,7 @@ function Streak(props: StreakInput): React.JSX.Element {
     lastCompleted: new Date(Date.UTC(0, 0, 0, 0, 0, 0))
   };
   const [streak, streakDispatch] = useReducer(streakReducer, defaultStreakValue);
-  const [loaded, setLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Loads streak data from storage
   useEffect(() => {
@@ -90,17 +90,17 @@ function Streak(props: StreakInput): React.JSX.Element {
         counter: value.counter,
         lastCompleted: new Date(value.lastCompleted)
       })
-      setLoaded(true);
+      setIsLoaded(true);
     }
     getStreakFromStorage(defaultStreakValue, callback);
   }, [])
 
   // Stores current streak data in storage only if our data has been loaded
   useEffect(() => {
-    if (loaded) {
+    if (isLoaded) {
       storeStreakInStorage(streak);
     }
-  }, [loaded, streak])
+  }, [isLoaded, streak])
 
   // Get goals from props and determine if we are meant to increment streak
   // counter
@@ -115,7 +115,7 @@ function Streak(props: StreakInput): React.JSX.Element {
 
   // Need to ensure we are only incrementing streak counter if data has been
   // loaded
-  if (loaded) {
+  if (isLoaded) {
     if (streak.lastCompleted < getMidnight(new Date(currentDate.getTime() - 24 * 60 * 60 * 1000))) {
       streakDispatch({
         action: STREAK_REDUCER_ACTIONS.RESET,

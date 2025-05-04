@@ -10,7 +10,7 @@ export interface AddGoalInput {
   addGoalCallback: (newGoal: Goal) => void
 }
 
-function AddGoal(prop: AddGoalInput): React.JSX.Element {
+function AddGoalButton(prop: AddGoalInput): React.JSX.Element {
   const [modalState, setModalState] = useState(false);
   const { addGoalCallback } = prop;
 
@@ -45,4 +45,4 @@ function AddGoal(prop: AddGoalInput): React.JSX.Element {
   )
 }
 
-export default AddGoal;
+export default AddGoalButton;

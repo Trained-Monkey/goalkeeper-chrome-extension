@@ -2,12 +2,12 @@ import React, { useEffect, useReducer, useState } from 'react';
 // Components & Interfaces
 import GoalList from './components/GoalList/GoalList';
 import Streak from './components/Streak/Streak';
-import AddGoal from './components/AddGoal/AddGoal';
+import AddGoalButton from './components/AddGoal/AddGoalButton';
 import {GoalInput} from './components/GoalList/Goal/Goal';
 import Goal from './interface/Goal';
 import { REDUCER_ACTION_TYPES, ReducerAttributes } from './constants/GoalList';
 // Misc
-import { getFromStoragePromise, storeInStorage } from './utils/ChromeStorage';
+import { getFromStorage, storeInStorage } from './utils/Storage';
 import './App.css';
 
 function goalsReducer(state: Goal[] | null, action: ReducerAttributes): Goal[] {
@@ -39,11 +39,11 @@ function goalsReducer(state: Goal[] | null, action: ReducerAttributes): Goal[] {
 function App() {
   const emptyList: Goal[] = [];
   const [storedGoals, storedGoalsDispatch] = useReducer(goalsReducer, emptyList);
-  const [loaded, setLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Get our stored goals data from storage
   useEffect(() => {
-    getFromStoragePromise({ 'goals': [] })?.then((result) => {
+    getFromStorage({ 'goals': [] })?.then((result) => {
       const goals = result['goals'].map(((goal: any) => {
         const result = { ...goal }
         result.lastCompleted = new Date(goal.lastCompleted.toString());
@@ -53,12 +53,12 @@ function App() {
         action: REDUCER_ACTION_TYPES.LOAD,
         storedGoals: goals
       })
-      setLoaded(true);
+      setIsLoaded(true);
     })
   }, [])
 
   useEffect(() => {
-    if (loaded) {
+    if (isLoaded) {
       const formattedGoals = storedGoals.map((goal: any) => {
         const result = { ...goal };
         result.lastCompleted = goal.lastCompleted.toString();
@@ -66,7 +66,7 @@ function App() {
       })
       storeInStorage({ goals: formattedGoals });
     }
-  }, [storedGoals, loaded])
+  }, [storedGoals, isLoaded])
 
   // Attaching our callbacks for marking and deleting goal
   const goalsWithCallback: GoalInput[] =
@@ -101,7 +101,7 @@ function App() {
       <GoalList goals={goalsWithCallback} />
       <div className="manage-goal-container">
         <Streak goals={storedGoals} />
-        <AddGoal addGoalCallback={addGoal} />
+        <AddGoalButton addGoalCallback={addGoal} />
       </div>
 
     </div>
