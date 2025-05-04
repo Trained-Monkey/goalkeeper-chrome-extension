@@ -13,3 +13,10 @@ export function getDaysBetweenDates(start: Date, end: Date): number {
   let milliseconds = treatAsUTC(end).getTime() - treatAsUTC(start).getTime();
   return milliseconds / millisecondsPerDay;
 }
+
+// Gets midnight of current date, rounded down
+export function getMidnight(date: Date): Date {
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
+  return result;
+}

@@ -7,7 +7,7 @@ import { render } from '@testing-library/react';
 import { screen, within } from "@testing-library/dom";
 import GoalList from './GoalList';
 import React from 'react';
-import GoalInput from '../../interface/GoalInput';
+import { GoalInput } from './Goal/Goal';
 import { TYPES } from '../../constants/Goal';
 
 function generateTestData() {

@@ -15,11 +15,11 @@ export interface AddGoalModalInput {
   // Forcefully closes the modal
   closeModal: () => void
   // Closes the modal but only if the space outside the modal is clicked
-  closeModalOnClick: (event: any) => void
+  closeModalIfClicked: (event: any) => void
 }
 
 function AddGoalModal(props: AddGoalModalInput) {
-  const { closeModal, closeModalOnClick, addGoalCallback } = props;
+  const { closeModal, closeModalIfClicked, addGoalCallback } = props;
   const [startDate, setStartDate] = useState(new Date());
 
   function submitForm(formData: any) {
@@ -41,7 +41,7 @@ function AddGoalModal(props: AddGoalModalInput) {
   }
   return (
     <div
-      onClick={closeModalOnClick}
+      onClick={closeModalIfClicked}
       className="modal fade show bd-example-modal-lg"
       tabIndex={-1}
       role="dialog"

@@ -19,7 +19,6 @@ function goalsReducer(state: Goal[] | null, action: ReducerAttributes): Goal[] {
   // could refactor in future to ensure attributes must be present.
   if (action.action === REDUCER_ACTION_TYPES.TOGGLE) {
     return state.map((oldGoalInputState, index) => {
-      
       if (index === action.index) {
         return action.nextGoalState!;
       }

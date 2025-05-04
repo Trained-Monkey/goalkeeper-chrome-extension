@@ -24,7 +24,11 @@ function GoalList(prop: GoalListInput): React.JSX.Element {
       <ul className="list-group">
         {
           goals.map((goal: GoalInput) => (
-            <Goal key={goal.name + goal.lastCompleted.getTime()} {...goal} />
+
+            <Goal
+              key={`${goal.name}_${goal.lastCompleted.getTime()}`}
+              {...goal}
+            />
           ))
         }
       </ul>

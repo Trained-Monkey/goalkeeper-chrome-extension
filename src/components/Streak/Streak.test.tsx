@@ -1,9 +1,8 @@
 import { screen, render, waitFor } from '@testing-library/react';
 import React from 'react';
 // Componenents
-import Streak from './Streak';
+import Streak, { StreakInput } from './Streak';
 // Interfaces
-import StreakInput from '../../interface/StreakInput';
 import Goal from '../../interface/Goal';
 import { TYPES } from '../../constants/Goal';
 import StreakStoredData from '../../interface/StreakStoredData';

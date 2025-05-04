@@ -14,10 +14,11 @@ export interface GoalInput {
   lastCompleted: Date,
   // Callback to delete goal
   deletionCallback: any
-  // Callback to mark goal as finished
+  // Callback to mark goal as finished, expects to receive the new goal state
   finishedCallback: any
 }
 
+// React element showing goal alongside with buttons to mark as done or delete
 function Goal(prop: GoalInput): React.JSX.Element {
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
   const { 

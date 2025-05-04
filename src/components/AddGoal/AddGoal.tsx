@@ -19,7 +19,7 @@ function AddGoal(prop: AddGoalInput): React.JSX.Element {
     setModalState(true);
   }
 
-  function closeModalOnClick(event: any) {
+  function closeModalIfClicked(event: any) {
     if (event.target === event.currentTarget) {
       document.body.classList.remove('modal-open');
       setModalState(false);
@@ -38,7 +38,7 @@ function AddGoal(prop: AddGoalInput): React.JSX.Element {
 
       {modalState && <AddGoalModal
         closeModal={closeModal}
-        closeModalOnClick={closeModalOnClick}
+        closeModalIfClicked={closeModalIfClicked}
         addGoalCallback={addGoalCallback}
       />}
     </div>

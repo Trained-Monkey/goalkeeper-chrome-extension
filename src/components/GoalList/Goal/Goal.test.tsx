@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event'
 // Components
 import Goal from "./Goal";
 // Interfaces
-import GoalInput from "../../../interface/GoalInput";
+import { GoalInput } from "./Goal";
 import { TYPES } from "../../../constants/Goal";
 
 describe("Goal", () => {

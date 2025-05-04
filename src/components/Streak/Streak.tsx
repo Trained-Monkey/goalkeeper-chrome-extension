@@ -11,17 +11,12 @@ import {
   getFromStoragePromise,
   storeInStorage
 } from "../../utils/ChromeStorage";
+import { getMidnight } from "../../utils/Date";
 
 export interface StreakInput {
   // List of goals, used to calculate whether we need to increment todays 
   // streak or not
   goals: Goal[],
-}
-
-function getMidnight(date: Date): Date {
-  const result = new Date(date);
-  result.setHours(0, 0, 0, 0);
-  return result;
 }
 
 function streakReducer(state: any, action: ReducerAttributes) {
@@ -87,6 +82,7 @@ function Streak(props: StreakInput): React.JSX.Element {
   const [streak, streakDispatch] = useReducer(streakReducer, defaultStreakValue);
   const [loaded, setLoaded] = useState(false);
 
+  // Loads streak data from storage
   useEffect(() => {
     const callback = (value: StreakStoredData) => {
       streakDispatch({
@@ -99,6 +95,7 @@ function Streak(props: StreakInput): React.JSX.Element {
     getStreakFromStorage(defaultStreakValue, callback);
   }, [])
 
+  // Stores current streak data in storage only if our data has been loaded
   useEffect(() => {
     if (loaded) {
       storeStreakInStorage(streak);
