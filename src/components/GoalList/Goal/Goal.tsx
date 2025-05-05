@@ -3,7 +3,7 @@ import React from "react";
 import { TYPES } from "../../../constants/Goal";
 // Misc
 import './Goal.css';
-import { daysTillDueString, daysTillDue } from "../../../utils/Goal";
+import { timeTillDueString } from "../../../utils/Goal";
 
 export interface GoalInput {
   // Name of the goal
@@ -20,28 +20,17 @@ export interface GoalInput {
 
 // React element showing goal alongside with buttons to mark as done or delete
 function Goal(prop: GoalInput): React.JSX.Element {
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
-  const { 
-    name, 
-    type, 
+  const {
+    name,
+    type,
     lastCompleted,
-    deletionCallback, 
+    deletionCallback,
     finishedCallback
   } = prop;
-  const expiry: string = daysTillDueString(lastCompleted, type);
+  const expiry: string = timeTillDueString(lastCompleted, type);
 
-  function handleSubmitButtonClick() {
-    const nextGoalState: GoalInput = {
-      name: name,
-      type: type,
-      lastCompleted: new Date(lastCompleted.getTime()
-        + daysTillDue(lastCompleted, type)
-        * millisecondsPerDay),
-      deletionCallback: () => { },
-      finishedCallback: () => { }
-    }
-
-    finishedCallback(nextGoalState);
+  function handleDoneButtonClick() {
+    finishedCallback();
   }
 
   function handleDeleteButtonClick() {
@@ -72,15 +61,14 @@ function Goal(prop: GoalInput): React.JSX.Element {
         </p>
       </div>
       <div className="goal-item-container button">
-        {taskCompleted ? null :
-          <button
-            onClick={handleSubmitButtonClick}
-            name="submit-button"
-            className="btn btn-primary"
-          >
-            Done
-          </button>
-        }
+
+        <button
+          onClick={handleDoneButtonClick}
+          name="submit-button"
+          className="btn btn-primary"
+        >
+          {taskCompleted ? "Undo" : "Done"}
+        </button>
       </div>
 
       <div className="goal-item-container button">

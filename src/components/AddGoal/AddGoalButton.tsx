@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import AddGoalModal from "./AddGoalModal/AddGoalModal";
 import Goal from "../../interface/Goal";
 // Misc
-import "./AddGoal.css";
+import "./AddGoalButton.css";
 
 export interface AddGoalInput {
   // Function to call to add goal obtained from form.

@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useMemo } from "react";
 // Interfaces
 import StreakStoredData from "../../interface/StreakStoredData";
 import Goal from "../../interface/Goal";
-import { STREAK_REDUCER_ACTIONS, ReducerAttributes } from "../../constants/Streak";
+import { STREAK_REDUCER_ACTIONS, 
+  ReducerAttributes 
+} from "../../constants/Streak";
 // Misc
 import "./Streak.css";
 import fireUnlitImg from "../../assets/Streak/fire-unlit.svg";
@@ -32,9 +34,10 @@ function streakReducer(state: any, action: ReducerAttributes) {
     }
   } else if (action.action === STREAK_REDUCER_ACTIONS.CEIL) {
     if (state.lastCompleted < new Date()) {
+      const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
       return {
         counter: state.counter + 1,
-        lastCompleted: getMidnight(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
+        lastCompleted: getMidnight(tomorrow)
       }
     }
     return state;
@@ -75,11 +78,12 @@ function storeStreakInStorage(state: any): void {
 }
 
 function Streak(props: StreakInput): React.JSX.Element {
-  const defaultStreakValue = {
+  const defaultStreakValue = useMemo(() => {return {
     counter: 0,
     lastCompleted: new Date(Date.UTC(0, 0, 0, 0, 0, 0))
-  };
-  const [streak, streakDispatch] = useReducer(streakReducer, defaultStreakValue);
+  }}, []);
+  const [streak, streakDispatch] = useReducer(streakReducer, 
+    defaultStreakValue);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Loads streak data from storage
@@ -93,7 +97,7 @@ function Streak(props: StreakInput): React.JSX.Element {
       setIsLoaded(true);
     }
     getStreakFromStorage(defaultStreakValue, callback);
-  }, [])
+  }, [defaultStreakValue])
 
   // Stores current streak data in storage only if our data has been loaded
   useEffect(() => {
@@ -116,12 +120,13 @@ function Streak(props: StreakInput): React.JSX.Element {
   // Need to ensure we are only incrementing streak counter if data has been
   // loaded
   if (isLoaded) {
-    if (streak.lastCompleted < getMidnight(new Date(currentDate.getTime() - 24 * 60 * 60 * 1000))) {
+    const nextDay = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+    const nextMidnight = getMidnight(nextDay);
+    if (streak.lastCompleted < nextMidnight) {
       streakDispatch({
         action: STREAK_REDUCER_ACTIONS.RESET,
       })
     }
-
     if (numUnfinishedGoals === 0 && streak.lastCompleted < currentDate) {
       streakDispatch({
         action: STREAK_REDUCER_ACTIONS.CEIL,

@@ -41,31 +41,30 @@ export function goalExpiresBeforeGoal(x: GoalInput, y: GoalInput): number {
 // Converts given milliseconds to the number of days/weeks/months.
 // - milliseconds: Number of milliseconds to convert
 export function getMsToUnitOfTime(milliseconds: number): string {
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
   const millisecondsPerHour = 60 * 60 * 1000;
-  const monthThreshold = 27;
-  const weekThreshold = 7;
-  const dayThreshold = 1;
-  const daysTillExpiry = Math.floor(milliseconds / millisecondsPerDay);
+  const millisecondsPerDay = millisecondsPerHour * 24;
+  const monthThreshold = 27 * millisecondsPerDay;
+  const weekThreshold = 7 * millisecondsPerDay;
+  const dayThreshold = 1 * millisecondsPerDay;
+  const hourThreshold = millisecondsPerHour;
 
-  milliseconds -= daysTillExpiry * millisecondsPerDay;
-  const hoursTillExpiry = Math.floor(milliseconds / millisecondsPerHour);
+  const timeThresholds = {
+    "month": monthThreshold,
+    "week": weekThreshold,
+    "day": dayThreshold,
+    "hour": hourThreshold,
+    "minute": 0
+  }
 
-  let unitOfTime: string;
-  let numUnits: number;
+  let unitOfTime: string = "millisecond";
+  let numUnits: number = milliseconds;
 
-  if (daysTillExpiry > monthThreshold) {
-    unitOfTime = "month";
-    numUnits = Math.floor(daysTillExpiry / monthThreshold);
-  } else if (daysTillExpiry > weekThreshold) {
-    unitOfTime = "week";
-    numUnits = Math.floor(daysTillExpiry / weekThreshold);
-  } else if (daysTillExpiry > dayThreshold) {
-    unitOfTime = "day";
-    numUnits = Math.floor(daysTillExpiry);
-  } else {
-    unitOfTime = "hour";
-    numUnits = hoursTillExpiry;
+  for (const [key, value] of Object.entries(timeThresholds)){
+    if (milliseconds > value){
+      unitOfTime = key;
+      numUnits = Math.floor(milliseconds/value);
+      break;
+    }
   }
 
   if (numUnits > 1) {
@@ -108,7 +107,7 @@ export function daysTillDue(lastCompleted: Date, goalType: TYPES): number {
 // measurement attached.
 // - lastCompleted: Date goal was last completed
 // - goalType: How often goal is to be repeated
-export function daysTillDueString(lastCompleted: Date,
+export function timeTillDueString(lastCompleted: Date,
   goalType: TYPES): string {
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
   let numDaysTillDue = daysTillDue(lastCompleted, goalType);
