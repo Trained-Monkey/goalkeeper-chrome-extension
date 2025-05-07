@@ -53,14 +53,20 @@ function goalsReducer(state: Goal[] | null, action: ReducerAttributes): Goal[] {
         let lastCompleted;
         switch (oldGoalState.type) {
           case TYPES.MONTHLY:
-            lastCompleted = new Date(new Date(oldGoalState.lastCompleted).setMonth(newTime + diff * operand));
+            lastCompleted = new Date(
+              new Date(oldGoalState.lastCompleted)
+                .setMonth(newTime + diff * operand)
+            );
             break;
 
           case TYPES.DAILY:
           case TYPES.WEEKLY:
           case TYPES.FORTNIGHTLY:
           default:
-            lastCompleted = new Date(new Date(oldGoalState.lastCompleted).setDate(newTime + diff * operand));
+            lastCompleted = new Date(
+              new Date(oldGoalState.lastCompleted)
+                .setDate(newTime + diff * operand)
+            );
             break;
         }
 

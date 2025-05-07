@@ -1,13 +1,19 @@
+// e2e tests for the app
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import React from "react";
 
-test('', () => {
-  // Need to mock chrome extension apis
+describe('App', () => {
 
+  it('renders a stored list of goals', () => {
 
-  
-  // render(<App />);
-  // const linkElement = screen.getByText(/learn react/i);
-  // expect(linkElement).toBeInTheDocument();
+  })
+
+  it ('lets user add goals', () => {
+
+  })
+
+  it('lets users mark goals as completed and delete goals', () => {
+
+  })
 });

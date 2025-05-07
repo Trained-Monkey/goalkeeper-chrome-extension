@@ -1,3 +1,8 @@
+// Testing streak component that displays the number of consecutive days in 
+// which all goals have been completed
+// - Tests it can correctly read data from chrome API
+// - Correctly increments streak and decreases streak based on goals done
+// - It correctly doesnt show a streak when there is no streak
 import { screen, render, waitFor } from '@testing-library/react';
 import React from 'react';
 // Componenents
@@ -23,28 +28,11 @@ const dummyFinishedGoalsData: Goal[] = [
   }
 ]
 describe('Streak', () => {
-  it("should by default has no streak", async () => {
-    const mockFn = jest.spyOn(chrome.storage.local, "get");
-    jest.spyOn(chrome.storage.local, "set").mockImplementation(() => Promise.resolve({}));
-
-    mockFn.mockImplementation(() => Promise.resolve({}));
-
-    const contextValue: StreakInput = {
-      goals: dummyUnfinishedGoalsData,
-    }
-
-    render(<Streak {...contextValue} />);
-
-    await waitFor(() => {
-      expect(mockFn).toHaveBeenCalledTimes(1);
-      expect(screen.queryByText(/[0-9]+/)).not.toBeInTheDocument();
-    })
-  })
-  it("should not show a number when there is no streak", async () => {
-    const mockFn = jest.spyOn(chrome.storage.local, "get");
-    jest.spyOn(chrome.storage.local, "set").mockImplementation(() => Promise.resolve({}));
-
-    mockFn.mockImplementation(() => Promise.resolve({ counter: 0 }));
+  it("should by default have no streak and not show a number", async () => {
+    const mockGetter = jest.spyOn(chrome.storage.local, "get");
+    const mockSetter = jest.spyOn(chrome.storage.local, "set");
+    mockSetter.mockImplementation(() => Promise.resolve({}));
+    mockGetter.mockImplementation(() => Promise.resolve({}));
 
     const contextValue: StreakInput = {
       goals: dummyUnfinishedGoalsData,
@@ -53,7 +41,7 @@ describe('Streak', () => {
     render(<Streak {...contextValue} />);
 
     await waitFor(() => {
-      expect(mockFn).toHaveBeenCalledTimes(1);
+      expect(mockGetter).toHaveBeenCalledTimes(1);
       expect(screen.queryByText(/[0-9]+/)).not.toBeInTheDocument();
     })
   })

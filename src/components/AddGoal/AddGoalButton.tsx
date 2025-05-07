@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, lazy } from "react";
 // Components & Interfaces
-import AddGoalModal from "./AddGoalModal/AddGoalModal";
+// import AddGoalModal from "./AddGoalModal/AddGoalModal";
 import Goal from "../../interface/Goal";
 // Misc
 import "./AddGoalButton.css";
+
+const AddGoalModal = lazy(() => import("./AddGoalModal/AddGoalModal"));
+
 
 export interface AddGoalInput {
   // Function to call to add goal obtained from form.
