@@ -1,7 +1,12 @@
 // Utility functions associated with manipulating goals 
-import { GoalInput } from "../components/GoalList/Goal/Goal";
+
 import { TYPES } from "../constants/Goal";
 import { getDaysBetweenDates } from "./Date";
+
+interface GoalInput {
+  lastCompleted: Date
+  type: TYPES
+}
 
 // Sorter function to detemine whether a goal should be before or after another
 // goal, prioritises showing incomplete goals, then goals that are due first.

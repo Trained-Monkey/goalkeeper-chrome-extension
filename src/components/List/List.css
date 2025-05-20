@@ -1,0 +1,18 @@
+.list-header{
+  text-align: center;
+  width: 100%;
+}
+
+.list-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-content {
+  display: flex;
+  align-items: center;
+  max-height: 388px;
+  border: 1px solid grey;
+  overflow: scroll;
+}

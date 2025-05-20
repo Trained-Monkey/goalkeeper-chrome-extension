@@ -1,0 +1,15 @@
+.list-group-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 700px;
+  /* max-width: 700px; */
+}
+
+.list-group-item p {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0px;
+}

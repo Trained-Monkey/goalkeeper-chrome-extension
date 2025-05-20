@@ -1,15 +1,18 @@
 import React, { useEffect, useReducer, useState } from 'react';
 // Components & Interfaces
-import GoalList from './components/GoalList/GoalList';
 import Streak from './components/Streak/Streak';
 import AddGoalButton from './components/AddGoal/AddGoalButton';
-import { GoalInput } from './components/GoalList/Goal/Goal';
 import Goal from './interface/Goal';
 import { REDUCER_ACTION_TYPES, ReducerAttributes } from './constants/GoalList';
+import List from './components/List/List';
+
 // Misc
 import { getFromStorage, storeInStorage } from './utils/Storage';
 import './App.css';
 import { TYPES } from './constants/Goal';
+import ListItem from './components/ListItem/ListItem';
+import Button from './components/Button/Button';
+import { timeTillDueString } from './utils/Goal';
 
 function goalsReducer(state: Goal[] | null, action: ReducerAttributes): Goal[] {
   if (state == null) {
@@ -123,7 +126,7 @@ function App() {
   }, [storedGoals, isLoaded])
 
   // Attaching our callbacks for marking and deleting goal
-  const goalsWithCallback: GoalInput[] =
+  const goalsWithCallback: any[] =
     storedGoals.map((prev, index) => {
       return {
         ...prev,
@@ -151,7 +154,25 @@ function App() {
 
   return (
     <div className="app">
-      <GoalList goals={goalsWithCallback} />
+      <List title="Goals">
+        {goalsWithCallback.map((goal) => {
+          return <ListItem isSuccess={goal.lastCompleted.getTime() > Date.now()}>
+            <p> {goal.name} </p>
+            <p> {timeTillDueString(goal.lastCompleted, goal.type)} </p>
+            <p> {goal.type} </p>
+            <Button
+              content={goal.lastCompleted.getTime() > Date.now() ? "Undo" : "Done"}
+              onClick={goal.finishedCallback}
+            />
+            <Button
+              content="Delete"
+              onClick={goal.deletionCallback}
+              isDanger={true}
+            />
+          </ListItem>
+        })}
+      </List>
+      {/* <GoalList goals={goalsWithCallback} /> */}
       <div className="manage-goal-container">
         <Streak goals={storedGoals} />
         <AddGoalButton addGoalCallback={addGoal} />
