@@ -1,133 +1,30 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useState } from 'react';
 // Components & Interfaces
 import Streak from './components/Streak/Streak';
-import AddGoalButton from './components/AddGoal/AddGoalButton';
 import Goal from './interface/Goal';
-import { REDUCER_ACTION_TYPES, ReducerAttributes } from './constants/GoalList';
+import { REDUCER_ACTION_TYPES } from './constants/GoalList';
 import List from './components/List/List';
 
 // Misc
-import { getFromStorage, storeInStorage } from './utils/Storage';
 import './App.css';
-import { TYPES } from './constants/Goal';
 import ListItem from './components/ListItem/ListItem';
 import Button from './components/Button/Button';
 import { timeTillDueString } from './utils/Goal';
-
-function goalsReducer(state: Goal[] | null, action: ReducerAttributes): Goal[] {
-  if (state == null) {
-    state = []
-  }
-
-  // Letting typescript know some attributes wont be null despite being optional
-  // could refactor in future to ensure attributes must be present.
-  if (action.action === REDUCER_ACTION_TYPES.TOGGLE) {
-    return state.map((oldGoalState, index) => {
-      if (index === action.index) {
-        const currentDate = new Date();
-        let operand = 1;
-        let newTime;
-        let diff;
-        switch (oldGoalState.type) {
-          case TYPES.DAILY:
-            newTime = oldGoalState.lastCompleted.getDate()
-            diff = 1;
-            break;
-          case TYPES.WEEKLY:
-            newTime = oldGoalState.lastCompleted.getDate()
-            diff = 7;
-            break;
-          case TYPES.FORTNIGHTLY:
-            newTime = oldGoalState.lastCompleted.getDate()
-            diff = 14;
-            break;
-          case TYPES.MONTHLY:
-            newTime = oldGoalState.lastCompleted.getMonth()
-            diff = 1;
-            break;
-          default:
-            newTime = oldGoalState.lastCompleted.getDate();
-            diff = 0;
-        }
-        if (oldGoalState.lastCompleted > currentDate) {
-          operand = -1;
-        }
-
-        let lastCompleted;
-        switch (oldGoalState.type) {
-          case TYPES.MONTHLY:
-            lastCompleted = new Date(
-              new Date(oldGoalState.lastCompleted)
-                .setMonth(newTime + diff * operand)
-            );
-            break;
-
-          case TYPES.DAILY:
-          case TYPES.WEEKLY:
-          case TYPES.FORTNIGHTLY:
-          default:
-            lastCompleted = new Date(
-              new Date(oldGoalState.lastCompleted)
-                .setDate(newTime + diff * operand)
-            );
-            break;
-        }
-
-        return {
-          ...oldGoalState,
-          lastCompleted: lastCompleted
-        };
-
-      }
-      return oldGoalState;
-    })
-  } else if (action.action === REDUCER_ACTION_TYPES.DELETE) {
-    return state.filter((_, index) => index !== action.index);
-  } else if (action.action === REDUCER_ACTION_TYPES.LOAD) {
-    return action.storedGoals!;
-  } else if (action.action === REDUCER_ACTION_TYPES.ADD) {
-    return [...state, {
-      ...action.newGoal!
-    }]
-  }
-  throw Error(`Unknown action ${action.action}.`);
-}
+import Dialog from './components/Dialog/Dialog';
+import useGoals from './hooks/useGoals';
+import useStreak from './hooks/useStreak';
+import { getMidnight } from './utils/Date';
+import { STREAK_REDUCER_ACTIONS } from './constants/Streak';
 
 function App() {
-  const emptyList: Goal[] = [];
-  const [storedGoals, storedGoalsDispatch] = useReducer(goalsReducer, emptyList);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  // Get our stored goals data from storage
-  useEffect(() => {
-    getFromStorage({ 'goals': [] })?.then((result) => {
-      const goals = result['goals'].map(((goal: any) => {
-        const result = { ...goal }
-        result.lastCompleted = new Date(goal.lastCompleted.toString());
-        return result;
-      }))
-      storedGoalsDispatch({
-        action: REDUCER_ACTION_TYPES.LOAD,
-        storedGoals: goals
-      })
-      setIsLoaded(true);
-    })
-  }, [])
-
-  useEffect(() => {
-    if (isLoaded) {
-      const formattedGoals = storedGoals.map((goal: any) => {
-        const result = { ...goal };
-        result.lastCompleted = goal.lastCompleted.toString();
-        return result;
-      })
-      storeInStorage({ goals: formattedGoals });
-    }
-  }, [storedGoals, isLoaded])
+  const [storedGoals, storedGoalsDispatch] = useGoals();
+  const [streak, streakDispatch] = useStreak();
+  // const streak = 10;
+  const [openDialog, setOpenDialog] = useState(false);
 
   // Attaching our callbacks for marking and deleting goal
-  const goalsWithCallback: any[] =
-    storedGoals.map((prev, index) => {
+  const goalsWithCallback: any[] = storedGoals.map(
+    (prev, index) => {
       return {
         ...prev,
         deletionCallback: () => {
@@ -143,7 +40,39 @@ function App() {
           })
         }
       }
-    })
+    }
+  )
+
+  // Handle logic between goal and streak here
+  const currentDate = new Date();
+  const numUnfinishedGoals = storedGoals.reduce((curr: number, acc: Goal) => {
+    if (acc.lastCompleted < currentDate) {
+      return curr + 1;
+    }
+    return curr;
+  }, 0)
+
+  // Need to ensure we are only incrementing streak counter if data has been
+  // loaded
+  if (true) {
+    const nextDay = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+    const nextMidnight = getMidnight(nextDay);
+    if (streak.lastCompleted < nextMidnight) {
+      streakDispatch({
+        action: STREAK_REDUCER_ACTIONS.RESET,
+      })
+    }
+    if (numUnfinishedGoals === 0 && streak.lastCompleted < currentDate) {
+      streakDispatch({
+        action: STREAK_REDUCER_ACTIONS.CEIL,
+      })
+    } else if (numUnfinishedGoals > 0 && streak.lastCompleted > currentDate) {
+      streakDispatch({
+        action: STREAK_REDUCER_ACTIONS.FLOOR,
+      })
+    }
+  }
+
 
   const addGoal = (newGoal: Goal) => {
     storedGoalsDispatch({
@@ -172,12 +101,19 @@ function App() {
           </ListItem>
         })}
       </List>
-      {/* <GoalList goals={goalsWithCallback} /> */}
       <div className="manage-goal-container">
-        <Streak goals={storedGoals} />
-        <AddGoalButton addGoalCallback={addGoal} />
+        <Streak counter={streak.counter} />
+        <Button
+          content={"Add Goal"}
+          onClick={() => { setOpenDialog(true) }}
+        />
+        <Dialog
+          title="Add Goal"
+          isOpen={openDialog}
+          closeDialog={() => { setOpenDialog(false) }}
+        >
+        </Dialog>
       </div>
-
     </div>
   );
 }
