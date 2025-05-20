@@ -1,6 +1,5 @@
 import { useMemo, useReducer, useState, useEffect } from "react";
 import { ReducerAttributes, STREAK_REDUCER_ACTIONS } from "../constants/Streak";
-import Goal from "../interface/Goal";
 import StreakStoredData from "../interface/StreakStoredData";
 import { getMidnight } from "../utils/Date";
 import { getFromStorage, storeInStorage } from "../utils/Storage";
@@ -91,10 +90,6 @@ function useStreak() {
       storeStreakInStorage(streak);
     }
   }, [isLoaded, streak])
-
-  // Get goals from props and determine if we are meant to increment streak
-  // counter
-  
 
   return [streak, streakDispatch];
 }

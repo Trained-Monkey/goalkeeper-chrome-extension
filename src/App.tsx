@@ -73,7 +73,6 @@ function App() {
     }
   }
 
-
   const addGoal = (newGoal: Goal) => {
     storedGoalsDispatch({
       action: REDUCER_ACTION_TYPES.ADD,
@@ -107,6 +106,7 @@ function App() {
           content={"Add Goal"}
           onClick={() => { setOpenDialog(true) }}
         />
+
         <Dialog
           title="Add Goal"
           isOpen={openDialog}

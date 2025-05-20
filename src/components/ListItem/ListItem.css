@@ -12,4 +12,9 @@
   display: flex;
   align-items: center;
   margin-bottom: 0px;
+  flex: 4 1;
+}
+
+.list-group-item button {
+  flex: 1 1;
 }
