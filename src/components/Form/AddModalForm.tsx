@@ -4,6 +4,7 @@ import Goal from "../../interface/Goal";
 import { TYPES } from "../../constants/Goal";
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
+import { updateGoal } from "../../utils/Goal";
 
 
 interface AddModalFormInput {
@@ -28,6 +29,8 @@ function AddModalForm(props: AddModalFormInput) {
       type: formData.get(["goalType"]),
       lastCompleted: new Date(year, parseInt(month) - 1, parseInt(day))
     }
+
+    updateGoal(newGoal);
 
     addGoal(newGoal);
     closeDialog();
