@@ -24,6 +24,7 @@ function AddModalForm(props: AddModalFormInput) {
 
     const [day, month, year] = formData.get(["goalStartDate"]).split("/");
 
+    
     const newGoal: Goal = {
       name: formData.get(["goalName"]),
       type: formData.get(["goalType"]),
