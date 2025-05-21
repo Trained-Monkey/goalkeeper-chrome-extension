@@ -3,6 +3,8 @@ import Button from "../Button/Button"
 import Goal from "../../interface/Goal";
 import { TYPES } from "../../constants/Goal";
 import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 interface AddModalFormInput {
   addGoal: (goal: Goal) => void,
