@@ -1,6 +1,7 @@
 // Utility functions associated with manipulating goals 
 
 import { TYPES } from "../constants/Goal";
+import Goal from "../interface/Goal";
 import { getDaysBetweenDates } from "./Date";
 
 interface GoalInput {
@@ -124,4 +125,15 @@ export function timeTillDueString(lastCompleted: Date,
     * millisecondsPerDay;
 
   return getMsToUnitOfTime(millisecondsRemaining);
+}
+
+export function updateGoal(goal: Goal): Goal {
+  let daysInc = daysTillDue(goal.lastCompleted, goal.type);
+  let result = goal.lastCompleted
+  while (new Date(result).setDate(result.getDate() + daysInc) < Date.now()){
+    result = new Date(new Date(result).setDate(result.getDate() + daysInc));
+    daysInc = daysTillDue(result, goal.type);
+  }
+  goal.lastCompleted = result;
+  return goal
 }

@@ -15,6 +15,7 @@ import useGoals from './hooks/useGoals';
 import useStreak from './hooks/useStreak';
 import { getMidnight } from './utils/Date';
 import { STREAK_REDUCER_ACTIONS } from './constants/Streak';
+import AddModalForm from './components/Form/AddModalForm';
 
 function App() {
   const [storedGoals, storedGoalsDispatch] = useGoals();
@@ -112,6 +113,10 @@ function App() {
           isOpen={openDialog}
           closeDialog={() => { setOpenDialog(false) }}
         >
+          <AddModalForm
+            closeDialog={() => { setOpenDialog(false) }}
+            addGoal={addGoal}
+          />
         </Dialog>
       </div>
     </div>

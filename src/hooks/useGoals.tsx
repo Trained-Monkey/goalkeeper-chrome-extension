@@ -3,6 +3,7 @@ import { TYPES } from "../constants/Goal";
 import { REDUCER_ACTION_TYPES, ReducerAttributes } from "../constants/GoalList";
 import Goal from "../interface/Goal";
 import { getFromStorage, storeInStorage } from "../utils/Storage";
+import { updateGoal } from "../utils/Goal";
 
 function goalsReducer(state: Goal[] | null, action: ReducerAttributes): Goal[] {
   if (state == null) {
@@ -93,6 +94,7 @@ function useGoals(): [Goal[], React.ActionDispatch<[action: ReducerAttributes]>]
       const goals = result['goals'].map(((goal: any) => {
         const result = { ...goal }
         result.lastCompleted = new Date(goal.lastCompleted.toString());
+        updateGoal(result);
         return result;
       }))
       goalsDispatch({

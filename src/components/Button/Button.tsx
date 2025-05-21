@@ -5,11 +5,13 @@ interface ButtonInput {
 
   content: string,
 
-  isDanger?: boolean
+  isDanger?: boolean,
+
+  type?: "submit" | "button" | "reset" 
 }
 
 function Button(prop: ButtonInput) {
-  const {onClick, content, isDanger} = prop;
+  const { onClick, content, isDanger, type } = prop;
 
   let classNames: string[] = ["btn"];
 
@@ -20,7 +22,11 @@ function Button(prop: ButtonInput) {
   }
 
   return <>
-    <button className={classNames.join(" ")} onClick={onClick}>
+    <button
+      className={classNames.join(" ")}
+      onClick={onClick}
+      type={type}
+    >
       {content}
     </button>
   </>
