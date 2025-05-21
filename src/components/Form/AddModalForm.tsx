@@ -29,6 +29,7 @@ function AddModalForm(props: AddModalFormInput) {
       type: formData.get(["goalType"]),
       lastCompleted: new Date(year, parseInt(month) - 1, parseInt(day))
     }
+    
 
     updateGoal(newGoal);
 
