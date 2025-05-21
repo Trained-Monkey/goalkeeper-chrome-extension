@@ -35,6 +35,7 @@ function AddModalForm(props: AddModalFormInput) {
     addGoal(newGoal);
     closeDialog();
   }
+  
 
   return <>
     <form className="form" action={handleSubmit}>
